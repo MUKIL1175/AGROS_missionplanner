@@ -64,3 +64,7 @@ desktop.ini
 # Temporary files
 *.tmp
 *.log
+
+# GLOBAL IGNORES
+logs/
+detections/
