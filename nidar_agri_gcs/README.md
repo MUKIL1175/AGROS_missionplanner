@@ -6,8 +6,7 @@ AGROS Mission Command is a unified Ground Control Station (GCS) designed specifi
 
 ---
 
-## Key Features
-
+## Key Features 
 - **Intelligent Scanning**: Real-time target detection using optimized HSV color-space algorithms.
 - **Unified Control**: A single, premium dashboard for scanning, reviewing, and uploading missions.
 - **Mission Planner Sync**: One-click launch and link to ArduPilot Mission Planner.
