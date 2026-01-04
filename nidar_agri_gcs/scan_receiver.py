@@ -12,7 +12,7 @@ SCAN_RESULTS_FILE = "scan_results.json"
 os.makedirs(DETECTION_DIR, exist_ok=True)
 
 class Scanner:
-    def __init__(self, connection_string='udp:127.0.0.1:14550'):
+    def __init__(self, connection_string='udp:127.0.0.1:14550', baudrate=115200):
         self.running = False
         self.cap = None
         self.master = None
@@ -20,8 +20,11 @@ class Scanner:
         self.display_frame = None
         self.frame_id = 0
         self.detection_id = 1
+        self.enable_osd = True  # OSD Toggle
         
         self.connection_string = connection_string
+        self.baudrate = baudrate
+
         
         self.scan_data = {
             "mission_id": "AGRI_MISSION_001",
@@ -41,6 +44,10 @@ class Scanner:
         self.altitude_rel = 0.0
         self.gps_fix = 0      # 0-1: No Fix, 2: 2D, 3: 3D, etc.
         self.sat_count = 0
+        
+        # Battery Status
+        self.battery_voltage = 0.0
+        self.battery_remaining = 0
         
         # HSV Thresholds (Default Yellow)
         self.hsv_min = np.array([20, 80, 80])
@@ -155,8 +162,10 @@ class Scanner:
         self.archive_session()
         print("[INFO] Scanner data cleared and archived.")
 
-    def set_connection_string(self, conn_str):
+    def set_connection_string(self, conn_str, baudrate=115200):
         self.connection_string = conn_str
+        self.baudrate = baudrate
+
         # Logic to reconnect could go here if we want dynamic switching
 
     def connect_mavlink(self, force=False):
@@ -165,13 +174,16 @@ class Scanner:
             
         self.connecting = True
         try:
-            print(f"[INFO] Scanner connecting to MAVLink at {self.connection_string}...")
+            # Force MAVLink 2.0
+            os.environ['MAVLINK20'] = '1'
+            
+            print(f"[INFO] Scanner connecting to MAVLink at {self.connection_string} (Baud: {self.baudrate})...")
             # Close existing if any
             if self.master:
                 try: self.master.close()
                 except: pass
                 
-            self.master = mavutil.mavlink_connection(self.connection_string)
+            self.master = mavutil.mavlink_connection(self.connection_string, baud=self.baudrate)
             # Wait for heartbeat with more feedback
             self.master.wait_heartbeat(timeout=10) 
             print("[INFO] Scanner MAVLink Heartbeat Received")
@@ -186,7 +198,7 @@ class Scanner:
                         if not self.master: break
                         try:
                             # Use non-blocking to keep loop alive for heartbeat checks
-                            msg = self.master.recv_match(type=['GLOBAL_POSITION_INT', 'HEARTBEAT', 'GPS_RAW_INT'], blocking=True, timeout=0.1)
+                            msg = self.master.recv_match(type=['GLOBAL_POSITION_INT', 'HEARTBEAT', 'GPS_RAW_INT', 'SYS_STATUS'], blocking=True, timeout=0.1)
                             if msg:
                                 if msg.get_type() == 'HEARTBEAT':
                                     self.last_heartbeat = time.time()
@@ -201,6 +213,9 @@ class Scanner:
                                 elif msg.get_type() == 'GPS_RAW_INT':
                                     self.gps_fix = msg.fix_type
                                     self.sat_count = msg.satellites_visible
+                                elif msg.get_type() == 'SYS_STATUS':
+                                    self.battery_voltage = msg.voltage_battery / 1000.0 if msg.voltage_battery != 65535 else 0.0
+                                    self.battery_remaining = msg.battery_remaining if msg.battery_remaining != -1 else 0
                             
                             # Check connection status
                             if time.time() - self.last_heartbeat > 7.0:
@@ -316,9 +331,10 @@ class Scanner:
                     elif "RED" in color_label.upper(): box_color = (0, 0, 255)
                     elif "GREEN" in color_label.upper(): box_color = (0, 255, 0)
 
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), box_color, 2)
-                    label_str = f"{color_label}: {self.detection_id:03d}"
-                    cv2.putText(frame, label_str, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, box_color, 2)
+                    if self.enable_osd:
+                        cv2.rectangle(frame, (x, y), (x + w, y + h), box_color, 2)
+                        label_str = f"{color_label}: {self.detection_id:03d}"
+                        cv2.putText(frame, label_str, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, box_color, 2)
             
             try:
                 h, w = frame.shape[:2]

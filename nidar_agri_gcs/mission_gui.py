@@ -16,6 +16,16 @@ except ImportError:
     SCANNER_AVAILABLE = False
     print("Warning: scan_receiver.py not found or invalid.")
 
+# Import Map View
+try:
+    import tkintermapview
+    MAP_AVAILABLE = True
+except ImportError:
+    MAP_AVAILABLE = False
+    print("Warning: tkintermapview not found. Map features disabled.")
+
+
+
 # Import i18n for multi-language support
 try:
     import i18n
@@ -52,6 +62,19 @@ class MissionAGROSGUI:
         self.connection_string_var = tk.StringVar(value=settings.get("connection_string", "udp:127.0.0.1:14550"))
         self.mp_path_var = tk.StringVar(value=settings.get("mp_path", self.auto_detect_mp()))
         self.language_var = tk.StringVar(value=settings.get("language", "System"))
+        self.fence_alt_max_var = tk.DoubleVar(value=settings.get("fence_alt_max", 80.0))
+        self.fence_margin_var = tk.DoubleVar(value=settings.get("fence_margin", 2.0))
+        self.fence_type_var = tk.StringVar(value=settings.get("fence_type", "Polygon + Alt (7)"))
+        self.fence_action_var = tk.StringVar(value=settings.get("fence_action", "RTL (1)"))
+
+        # Connection Variables (UDP Only)
+        self.udp_host_var = tk.StringVar(value=settings.get("udp_host", "127.0.0.1"))
+        self.udp_port_var = tk.StringVar(value=settings.get("udp_port", "14550"))
+
+
+
+
+
         
         # Set language if i18n is available
         if I18N_AVAILABLE:
@@ -91,17 +114,11 @@ class MissionAGROSGUI:
                                        font=("Arial", 10, "bold"), foreground="red")
         self.lbl_mav_status.pack(side=tk.LEFT, padx=5)
 
-        self.btn_mav_connect = ttk.Button(status_frame, text=_("🔌 CONNECT"), command=self.manual_mavlink_connect, width=12)
-        self.btn_mav_connect.pack(side=tk.LEFT, padx=5)
-
         ttk.Label(status_frame, text=" | GPS:").pack(side=tk.LEFT, padx=(5, 0))
         self.lbl_gps_status = ttk.Label(status_frame, text="OFFLINE", 
                                        font=("Arial", 10, "bold"), foreground="gray")
         self.lbl_gps_status.pack(side=tk.LEFT, padx=5)
 
-        # LINK MISSION PLANNER BUTTON
-        link_btn = ttk.Button(header_frame, text="🚀 LINK MISSION PLANNER", command=self.launch_mission_planner)
-        link_btn.pack(side=tk.RIGHT, padx=20)
         
         # === Controls Pane (Notebook for Tabbed View) ===
         notebook = ttk.Notebook(root)
@@ -153,34 +170,49 @@ class MissionAGROSGUI:
         self.log_area.config(state='disabled')
         print(message)
 
+    def _get_connection_params(self):
+        """Helper to build UDP connection string from current UI state."""
+        conn_str = f"udp:{self.udp_host_var.get()}:{self.udp_port_var.get()}"
+        return conn_str, 115200 # Baud not used for UDP but kept for API compatibility
+
+
     def manual_mavlink_connect(self):
         if self.scanner:
-            conn_str = self.connection_string_var.get()
-            self.log(f"[INFO] Manual MAVLink reconnection triggered to {conn_str}...")
-            self.scanner.set_connection_string(conn_str)
+            conn_str, baud = self._get_connection_params()
+            # Update the stored variable as well
+            self.connection_string_var.set(conn_str)
+            
+            self.log(f"[INFO] Manual MAVLink reconnection triggered to {conn_str} at {baud}...")
+            self.scanner.set_connection_string(conn_str, baudrate=baud)
             self.lbl_mav_status.config(text="CONNECTING...", foreground="orange")
             # Start connection in thread to avoid freezing UI
             Thread(target=self.scanner.connect_mavlink, args=(True,), daemon=True).start()
         else:
             self.log("[ERROR] Scanner not available to connect.")
 
+
     def apply_settings(self):
-        conn_str = self.connection_string_var.get()
+        conn_str, baud = self._get_connection_params()
+        self.connection_string_var.set(conn_str)
+        
         mp_path = self.mp_path_var.get()
         language = self.language_var.get()
         
-        self.log(f"[CONFIG] Updating connection to: {conn_str}")
+        self.log(f"[CONFIG] UDP Sync: {conn_str}")
         self.log(f"[CONFIG] MP Path: {mp_path}")
         self.log(f"[CONFIG] Language: {language}")
         
         if self.scanner:
-            self.scanner.set_connection_string(conn_str)
-        
+            self.scanner.set_connection_string(conn_str, baudrate=baud)
+
+
+
         # Update language if i18n is available
         if I18N_AVAILABLE:
             i18n.set_language(language)
         
         self.save_settings()
+
         messagebox.showinfo("Settings", "Configuration Saved Successfully!\n\nNote: Language changes will take effect after restarting the application.")
 
     def load_settings(self):
@@ -194,11 +226,22 @@ class MissionAGROSGUI:
     def save_settings(self):
         settings = {
             "connection_string": self.connection_string_var.get(),
+            "language": self.language_var.get(),
             "mp_path": self.mp_path_var.get(),
-            "language": self.language_var.get()
+            "fence_alt_max": self.fence_alt_max_var.get(),
+            "fence_margin": self.fence_margin_var.get(),
+            "fence_type": self.fence_type_var.get(),
+            "fence_action": self.fence_action_var.get(),
+            "udp_host": self.udp_host_var.get(),
+            "udp_port": self.udp_port_var.get()
         }
+
+
+
+
         with open(SETTINGS_FILE, 'w') as f:
             json.dump(settings, f, indent=2)
+
 
     def auto_detect_mp(self):
         paths = [
@@ -214,6 +257,8 @@ class MissionAGROSGUI:
         path = filedialog.askopenfilename(title="Select MissionPlanner.exe", filetypes=[("Executable", "*.exe")])
         if path:
             self.mp_path_var.set(path)
+
+
 
     def launch_mission_planner(self):
         path = self.mp_path_var.get()
@@ -233,15 +278,32 @@ class MissionAGROSGUI:
         container = ttk.Frame(parent, padding="10")
         container.pack(fill=tk.BOTH, expand=True)
 
-        # MAVLink Config
-        frame = ttk.LabelFrame(container, text="Communication Configuration", padding="10")
+        # MAVLink Config (UDP ONLY)
+        frame = ttk.LabelFrame(container, text="MAVLink Communication (UDP Network)", padding="15")
         frame.pack(fill=tk.X, pady=5)
         
-        ttk.Label(frame, text="MAVLink Connection String:", font=("Arial", 10, "bold")).grid(row=0, column=0, sticky="w", padx=5, pady=5)
-        ttk.Entry(frame, textvariable=self.connection_string_var, width=40).grid(row=0, column=1, padx=5, pady=5)
-        
-        info_lbl = ttk.Label(frame, text="Examples: udp:127.0.0.1:14551, com4", foreground="gray")
-        info_lbl.grid(row=1, column=1, sticky="w", padx=5)
+        row1 = ttk.Frame(frame)
+        row1.pack(fill=tk.X, pady=2)
+        ttk.Label(row1, text="UDP Host:", font=("Arial", 10, "bold"), width=15).pack(side=tk.LEFT)
+        ttk.Entry(row1, textvariable=self.udp_host_var, width=25).pack(side=tk.LEFT, padx=5)
+        ttk.Label(row1, text="(e.g. 127.0.0.1)", foreground="gray").pack(side=tk.LEFT)
+
+        row2 = ttk.Frame(frame)
+        row2.pack(fill=tk.X, pady=2)
+        ttk.Label(row2, text="UDP Port:", font=("Arial", 10, "bold"), width=15).pack(side=tk.LEFT)
+        ttk.Entry(row2, textvariable=self.udp_port_var, width=25).pack(side=tk.LEFT, padx=5)
+        ttk.Label(row2, text="(typically 14550 or 14551)", foreground="gray").pack(side=tk.LEFT)
+
+        ttk.Label(frame, text="Note: Serial functionality has been disabled as per requirements.", 
+                  foreground="#cc0000", font=("Arial", 8, "italic")).pack(anchor="w", pady=(10, 0))
+
+        # Relocated Action Buttons
+        btn_row = ttk.Frame(frame)
+        btn_row.pack(pady=10, fill=tk.X)
+        self.btn_mav_connect = ttk.Button(btn_row, text=_("🔌 CONNECT MAVLINK"), command=self.manual_mavlink_connect, padding=5)
+        self.btn_mav_connect.pack(side=tk.LEFT, expand=True, fill=tk.X, padx=(0, 5))
+        ttk.Button(btn_row, text="🚀 LINK MISSION PLANNER", command=self.launch_mission_planner, padding=5).pack(side=tk.LEFT, expand=True, fill=tk.X, padx=(5, 0))
+
 
         # MP Integration
         mp_frame = ttk.LabelFrame(container, text="Mission Planner Integration (Universal)", padding="10")
@@ -250,9 +312,11 @@ class MissionAGROSGUI:
         ttk.Label(mp_frame, text="Mission Planner Path:", font=("Arial", 10, "bold")).grid(row=0, column=0, sticky="w", padx=5, pady=5)
         ttk.Entry(mp_frame, textvariable=self.mp_path_var, width=60).grid(row=0, column=1, padx=5, pady=5)
         ttk.Button(mp_frame, text="Browse...", command=self.browse_mp_path).grid(row=0, column=2, padx=5, pady=5)
-        
+
+
         ttk.Label(mp_frame, text="Tip: Configure this once and it will be saved for future sessions.", 
-                  foreground="gray").grid(row=1, column=1, sticky="w", padx=5)
+                  foreground="gray").grid(row=2, column=1, sticky="w", padx=5)
+
         
         # Language Settings
         lang_frame = ttk.LabelFrame(container, text="Language Settings", padding="10")
@@ -268,30 +332,19 @@ class MissionAGROSGUI:
                   foreground="gray").grid(row=1, column=1, sticky="w", padx=5)
 
         # Save Button at Bottom
+
         save_btn = ttk.Button(container, text="💾 SAVE ALL SETTINGS", style="Accent.TButton", command=self.apply_settings)
         save_btn.pack(pady=20)
 
     # --- PLANNING TAB LOGIC ---
     def _init_planning_tab(self, parent):
-        # Parameters Frame
-        param_frame = ttk.LabelFrame(parent, text="Mission Parameters", padding="10")
-        param_frame.pack(fill=tk.X, padx=10, pady=5)
+        # Data Management Frame
+        ctrl_frame = ttk.LabelFrame(parent, text="Data Management", padding="10")
+        ctrl_frame.pack(fill=tk.X, padx=10, pady=5)
         
-        ttk.Label(param_frame, text="Takeoff Alt (m):").grid(row=0, column=0, padx=5)
-        self.takeoff_alt_var = tk.DoubleVar(value=10.0)
-        ttk.Entry(param_frame, textvariable=self.takeoff_alt_var, width=8).grid(row=0, column=1, padx=5)
-        
-        ttk.Label(param_frame, text="Spray Alt (m):").grid(row=0, column=2, padx=5)
-        self.spray_alt_var = tk.DoubleVar(value=3.0)
-        ttk.Entry(param_frame, textvariable=self.spray_alt_var, width=8).grid(row=0, column=3, padx=5)
-        
-        ttk.Label(param_frame, text="Loiter Time (s):").grid(row=0, column=4, padx=5)
-        self.loiter_time_var = tk.IntVar(value=6)
-        ttk.Entry(param_frame, textvariable=self.loiter_time_var, width=8).grid(row=0, column=5, padx=5)
-        
-        ttk.Button(param_frame, text="Refresh", command=self.load_data).grid(row=0, column=6, padx=10)
-        ttk.Button(param_frame, text="History", command=self.open_history_browser).grid(row=0, column=7, padx=5)
-        ttk.Button(param_frame, text="Clear All Detections", command=self.clear_detections).grid(row=0, column=8, padx=5)
+        ttk.Button(ctrl_frame, text="Refresh List", command=self.load_data).pack(side=tk.LEFT, padx=5)
+        ttk.Button(ctrl_frame, text="View History", command=self.open_history_browser).pack(side=tk.LEFT, padx=5)
+        ttk.Button(ctrl_frame, text="Clear All Detections", command=self.clear_detections).pack(side=tk.LEFT, padx=5)
 
         # Split Pane
         content_pane = ttk.PanedWindow(parent, orient=tk.HORIZONTAL)
@@ -339,7 +392,9 @@ class MissionAGROSGUI:
         ttk.Button(action_frame, text="GENERATE MISSION FILE", command=self.generate_file).pack(side=tk.LEFT, padx=5)
         ttk.Label(action_frame, text=" | ").pack(side=tk.LEFT, padx=5)
         ttk.Button(action_frame, text="UPLOAD KML (Geofence)", command=self.start_upload_kml_thread).pack(side=tk.LEFT, padx=5)
-        ttk.Button(action_frame, text="UPLOAD FROM FILE", command=self.start_upload_file_thread).pack(side=tk.RIGHT, padx=5)
+
+
+
 
         # Binding
         self.tree.bind('<Button-1>', self.on_click)
@@ -347,9 +402,21 @@ class MissionAGROSGUI:
 
     # --- SCANNING TAB LOGIC ---
     def _init_scanning_tab(self, parent):
-        # Top Controls
         ctrl_frame = ttk.Frame(parent, padding="10")
         ctrl_frame.pack(fill=tk.X)
+        
+        # GPS & Battery Status (Right Side)
+        status_frame = ttk.Frame(ctrl_frame)
+        status_frame.pack(side=tk.RIGHT, padx=5)
+        
+        self.lbl_mav_status = ttk.Label(status_frame, text="MAV: WAIT", font=("Arial", 9, "bold"), foreground="gray")
+        self.lbl_mav_status.pack(side=tk.LEFT, padx=5)
+        
+        self.lbl_gps_status = ttk.Label(status_frame, text="GPS: Wait", font=("Arial", 9), foreground="gray")
+        self.lbl_gps_status.pack(side=tk.LEFT, padx=5)
+        
+        self.lbl_bat_status = ttk.Label(status_frame, text="Bat: N/A", font=("Arial", 9, "bold"), foreground="gray")
+        self.lbl_bat_status.pack(side=tk.LEFT, padx=5)
         
         # Camera Selector
         ttk.Label(ctrl_frame, text="Cam Input:").pack(side=tk.LEFT, padx=5)
@@ -365,6 +432,10 @@ class MissionAGROSGUI:
         
         self.lbl_status = ttk.Label(ctrl_frame, text="Status: IDLE", font=("Arial", 10, "bold"))
         self.lbl_status.pack(side=tk.LEFT, padx=20)
+        
+        # OSD Toggle
+        self.osd_var = tk.BooleanVar(value=True)
+        ttk.Checkbutton(ctrl_frame, text="Show OSD", variable=self.osd_var, command=self.toggle_osd).pack(side=tk.LEFT, padx=5)
         
         # Split Pane for Video + Settings
         scan_pane = ttk.PanedWindow(parent, orient=tk.HORIZONTAL)
@@ -445,6 +516,10 @@ class MissionAGROSGUI:
             self.scanner.hsv_min = np.array([h_min, s_min, v_min])
             self.scanner.hsv_max = np.array([h_max, s_max, v_max])
 
+    def toggle_osd(self):
+        if self.scanner:
+            self.scanner.enable_osd = self.osd_var.get()
+
     def start_scan(self):
         if not self.scanner:
             self.log("[ERROR] Scanner module unavailable.")
@@ -491,6 +566,17 @@ class MissionAGROSGUI:
                 fix_name = fix_map.get(fix, f"F:{fix}")
                 self.lbl_gps_status.config(text=f"{fix_name} ({sats} Sats)", foreground="blue" if fix >= 3 else "orange")
                 
+                # Update Battery
+                volts = getattr(self.scanner, 'battery_voltage', 0.0)
+                pct = getattr(self.scanner, 'battery_remaining', 0)
+                
+                # Determine color based on pct
+                bat_color = "green"
+                if pct < 20: bat_color = "red"
+                elif pct < 40: bat_color = "orange"
+                
+                self.lbl_bat_status.config(text=f"Bat: {volts:.1f}V ({pct}%)", foreground=bat_color)
+                
                 # Geofence Breach Check
                 if self.geofence:
                     lat = getattr(self.scanner, 'latitude', 0.0)
@@ -506,6 +592,7 @@ class MissionAGROSGUI:
             else:
                 self.lbl_mav_status.config(text="DISCONNECTED", foreground="red")
                 self.lbl_gps_status.config(text="OFFLINE", foreground="gray")
+                self.lbl_bat_status.config(text="Bat: N/A", foreground="gray")
 
         if self.scanner and self.scanner.running:
              # Sync with background processing
@@ -696,15 +783,13 @@ class MissionAGROSGUI:
 
     def get_selected_targets(self):
         targets = []
-        spray_alt = self.spray_alt_var.get()
-        loiter_time = int(self.loiter_time_var.get())
+        # Altitudes/Timings specific to targets are now handled globally in the Generator Config
+        # But if we wanted per-target overrides, we'd keep them here.
+        # For now, we strip them out or just return the raw dict copy.
         
         for i, det in enumerate(self.raw_detections):
             if self.selection_state.get(i, False):
-                t = det.copy()
-                t['spray_altitude'] = spray_alt
-                t['loiter_time'] = loiter_time
-                targets.append(t)
+                targets.append(det.copy())
         return targets
 
     def show_geofence_alert(self, lat, lon):
@@ -789,17 +874,9 @@ class MissionAGROSGUI:
     def generate_file(self):
         targets = self.get_selected_targets()
         
-        # Filter by geofence if available
-        if self.geofence:
-            filtered_targets = []
-            for t in targets:
-                if mission_generator.is_point_in_polygon(t['latitude'], t['longitude'], self.geofence):
-                    filtered_targets.append(t)
-            
-            diff = len(targets) - len(filtered_targets)
-            if diff > 0:
-                self.log(f"[INFO] Geofence filtered out {diff} targets.")
-            targets = filtered_targets
+        # Filter by geofence logic removed as per user request
+        # Geofence is only for MAVLink upload now.
+
 
         if not targets:
             messagebox.showwarning("Warning", "No targets selected or all filtered by geofence!")
@@ -808,27 +885,45 @@ class MissionAGROSGUI:
         # Show Mission Configuration Dialog
         config_dialog = tk.Toplevel(self.root)
         config_dialog.title("Mission Configuration")
-        config_dialog.geometry("400x250")
-        config_dialog.resizable(False, False)
+        config_dialog.geometry("450x450")
+        config_dialog.resizable(True, True)
         config_dialog.configure(bg="#f0f0f0")
         
         # Center the dialog
         config_dialog.transient(self.root)
         config_dialog.grab_set()
         
-        # Variables to store user choices
+        # Variables (Defaults)
         auto_takeoff_var = tk.BooleanVar(value=True)
         completion_action_var = tk.StringVar(value="RTL")
+        
+        travel_alt_var = tk.DoubleVar(value=10.0)
+        spray_alt_var = tk.DoubleVar(value=3.0)
+        loiter_time_var = tk.DoubleVar(value=6.0)
+        
         user_confirmed = tk.BooleanVar(value=False)
         
         # Title
         title_label = ttk.Label(config_dialog, text="Configure Mission Parameters", 
                                 font=("Arial", 12, "bold"), background="#f0f0f0")
-        title_label.pack(pady=15)
+        title_label.pack(pady=10)
         
-        # Auto Takeoff Frame
+        # 1. Altitude & Timing Params
+        param_frame = ttk.LabelFrame(config_dialog, text="Flight Parameters", padding="10")
+        param_frame.pack(fill=tk.X, padx=20, pady=5)
+        
+        ttk.Label(param_frame, text="Point-to-Point Altitude (m):").grid(row=0, column=0, padx=5, pady=5, sticky=tk.W)
+        ttk.Entry(param_frame, textvariable=travel_alt_var, width=10).grid(row=0, column=1, padx=5, pady=5)
+        
+        ttk.Label(param_frame, text="Waypoint Loiter Altitude (m):").grid(row=1, column=0, padx=5, pady=5, sticky=tk.W)
+        ttk.Entry(param_frame, textvariable=spray_alt_var, width=10).grid(row=1, column=1, padx=5, pady=5)
+        
+        ttk.Label(param_frame, text="Spray/Loiter Time (s):").grid(row=2, column=0, padx=5, pady=5, sticky=tk.W)
+        ttk.Entry(param_frame, textvariable=loiter_time_var, width=10).grid(row=2, column=1, padx=5, pady=5)
+
+        # 2. Auto Takeoff
         takeoff_frame = ttk.LabelFrame(config_dialog, text="Takeoff Configuration", padding="10")
-        takeoff_frame.pack(fill=tk.X, padx=20, pady=10)
+        takeoff_frame.pack(fill=tk.X, padx=20, pady=5)
         
         ttk.Checkbutton(takeoff_frame, text="Auto Takeoff (Include takeoff command)", 
                        variable=auto_takeoff_var).pack(anchor="w")
@@ -868,8 +963,11 @@ class MissionAGROSGUI:
         # Get user choices
         auto_takeoff = auto_takeoff_var.get()
         completion_action = completion_action_var.get()
+        travel_alt = travel_alt_var.get()
+        spray_alt = spray_alt_var.get()
+        loiter_time = loiter_time_var.get()
         
-        self.log(f"[INFO] Mission Config - Auto Takeoff: {auto_takeoff}, Completion: {completion_action}")
+        self.log(f"[INFO] Config - Travel Alt: {travel_alt}, Spray Alt: {spray_alt}, Time: {loiter_time}")
             
         # 1. Ask User for Path
         initial_file = "mission.waypoints"
@@ -888,7 +986,10 @@ class MissionAGROSGUI:
             content = mission_generator.generate_waypoints_content(
                 targets, 
                 auto_takeoff=auto_takeoff, 
-                completion_action=completion_action
+                completion_action=completion_action,
+                travel_alt=travel_alt,
+                spray_alt=spray_alt,
+                loiter_time=loiter_time
             )
             
             with open(path, 'w') as f:
@@ -901,42 +1002,155 @@ class MissionAGROSGUI:
             messagebox.showerror("Error", str(e))
 
     def start_upload_kml_thread(self):
+        """Step 1: Load, Simplify, and Show Preview."""
         path = filedialog.askopenfilename(
             title="Select KML Geofence File",
             filetypes=[("KML Files", "*.kml"), ("All Files", "*.*")]
         )
         if not path:
             return
-        t = Thread(target=self.upload_kml_logic, args=(path,))
-        t.start()
-        
-    def upload_kml_logic(self, path):
+            
         try:
             self.log(f"[INFO] Parsing KML: {path}...")
             poly = mission_generator.parse_kml_polygon(path)
             if not poly:
                 raise Exception("No polygon/coordinates found in KML or invalid format.")
             
-            self.geofence = poly
-            self.log(f"[SUCCESS] Loaded geofence with {len(poly)} points.")
-            
-            # Upload to MAVLink Fence
-            try:
-                master = self.scanner.master if self.scanner else None
-                mission_generator.upload_fence_mavlink(self.geofence, self.connection_string_var.get(), master=master)
-                self.log(f"[INFO] MAVLink Fence uploaded ({len(self.geofence)} points).")
-            except Exception as e:
-                self.log(f"[WARN] Failed to upload MAVLink fence: {e}")
+            # Professional Setup: Simplify and Validate
+            original_count = len(poly)
+            if original_count > 100:
+                self.log(f"[INFO] Simplifying complex polygon ({original_count} points)...")
+                poly = mission_generator.simplify_polygon(poly, epsilon=0.00005) # ~5m tolerance
+                self.log(f"[INFO] Simplified to {len(poly)} points.")
 
-            messagebox.showinfo("KML Upload", f"Loaded geofence with {len(poly)} points.\nMAVLink Fence enabled and visibility should be updated in Mission Planner.\nMission will be filtered by this area.")
+            ok, msg = mission_generator.validate_fence(poly)
+            if not ok:
+                raise Exception(f"Fence Validation Failed: {msg}")
+            
+            self.geofence = poly
+            self.log(f"[SUCCESS] Loaded geofence with {len(poly)} points. Opening preview.")
+            
+            # Show preview popup (Manual Push)
+            self.show_geofence_popup(poly, path)
+            
         except Exception as e:
-            self.log(f"[ERROR] KML Load Failed: {e}")
-            messagebox.showerror("KML Error", str(e))
+            self.log(f"[ERROR] Geofence Load Failed: {e}")
+            messagebox.showerror("Geofence Error", str(e))
+
+
+    def show_geofence_popup(self, polygon, path):
+        """Shows a popup with preview and adjustable fence configurations."""
+        win = tk.Toplevel(self.root)
+        win.title("Geofence Preview & Config")
+        win.geometry("1100x800")
+        win.grab_set() 
+        
+        # Main Layout: Left (Map) and Right (Config)
+        main_pane = ttk.PanedWindow(win, orient=tk.HORIZONTAL)
+        main_pane.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
+
+        # --- LEFT: MAP PREVIEW ---
+        map_container = ttk.LabelFrame(main_pane, text=f"Map Preview: {os.path.basename(path)}", padding="5")
+        main_pane.add(map_container, weight=3)
+        
+        if MAP_AVAILABLE:
+            map_widget = tkintermapview.TkinterMapView(map_container, corner_radius=0)
+            map_widget.pack(fill=tk.BOTH, expand=True)
+            map_widget.set_tile_server("https://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}&s=Ga", max_zoom=22)
+            
+            # Center on polygon
+            lats = [p[0] for p in polygon]
+            lons = [p[1] for p in polygon]
+            center_lat, center_lon = sum(lats)/len(lats), sum(lons)/len(lons)
+            map_widget.set_position(center_lat, center_lon)
+            map_widget.set_zoom(17)
+            map_widget.set_polygon(polygon, outline_color="red", border_width=2, fill_color=None)
+            for i, p in enumerate(polygon):
+                map_widget.set_marker(p[0], p[1], text=f"P{i+1}")
+        else:
+            ttk.Label(map_container, text="Map View Unavailable").pack(expand=True)
+
+        # --- RIGHT: CONFIG PANEL ---
+        config_frame = ttk.Frame(main_pane, padding="10")
+        main_pane.add(config_frame, weight=1)
+
+        ttk.Label(config_frame, text="Sync Parameters", font=("Arial", 11, "bold")).pack(anchor="w", pady=(0, 10))
+
+        # Re-use class variables but place in this UI
+        box = ttk.LabelFrame(config_frame, text="Hard Geofence Settings", padding="10")
+        box.pack(fill=tk.X, pady=5)
+
+        ttk.Label(box, text="Max Altitude (m):", font=("Arial", 9, "bold")).pack(anchor="w", pady=(5,0))
+        ttk.Entry(box, textvariable=self.fence_alt_max_var, width=15).pack(anchor="w", pady=2)
+
+        ttk.Label(box, text="Fence Margin (m):", font=("Arial", 9, "bold")).pack(anchor="w", pady=(5,0))
+        ttk.Entry(box, textvariable=self.fence_margin_var, width=15).pack(anchor="w", pady=2)
+
+        ttk.Label(box, text="Fence Type:", font=("Arial", 9, "bold")).pack(anchor="w", pady=(5,0))
+        type_opts = ["Polygon (4)", "Altitude + Polygon (5)", "Circle + Polygon (6)", "Polygon + Alt (7)", "All (7)"]
+        ttk.Combobox(box, textvariable=self.fence_type_var, values=type_opts, state="readonly", width=25).pack(anchor="w", pady=2)
+
+        ttk.Label(box, text="Fence Action:", font=("Arial", 9, "bold")).pack(anchor="w", pady=(5,0))
+        act_opts = ["RTL (1)", "Hold (2)", "Land (5)", "Brake (4)", "SmartRTL (3)", "None (0)"]
+        ttk.Combobox(box, textvariable=self.fence_action_var, values=act_opts, state="readonly", width=25).pack(anchor="w", pady=2)
+
+        ttk.Label(config_frame, text="Status:", font=("Arial", 10, "bold")).pack(anchor="w", pady=(20, 5))
+        status_lbl = ttk.Label(config_frame, text="Ready to Sync", foreground="blue", font=("Arial", 10, "italic"))
+        status_lbl.pack(anchor="w", pady=5)
+
+        def on_push():
+            try:
+                import re
+                def get_int_val(s):
+                    match = re.search(r'\((\d+)\)', s)
+                    return int(match.group(1)) if match else 1
+
+                # Connection Checks
+                master = self.scanner.master if self.scanner else None
+                if not master or not getattr(master, 'target_system', 0):
+                     status_lbl.config(text="❌ FAILED: Drone Not Connected", foreground="red")
+                     self.log("[ERROR] Geofence Push Failed: No Active MAVLink Connection.")
+                     return
+
+                # Use centralized params
+                conn_str, baud = self._get_connection_params()
+
+                max_alt = self.fence_alt_max_var.get()
+                margin = self.fence_margin_var.get()
+                f_type = get_int_val(self.fence_type_var.get())
+                f_action = get_int_val(self.fence_action_var.get())
+                
+                status_lbl.config(text="⏱ Syncing...", foreground="orange")
+                win.update_idletasks()
+
+                self.log(f"[INFO] Pushing geofence to {conn_str}...")
+                mission_generator.upload_fence_mavlink(
+                    polygon, conn_str, baudrate=baud, master=master, 
+                    fence_alt_max=max_alt, fence_margin=margin, 
+                    fence_type=f_type, fence_action=f_action
+                )
+                mission_generator.save_fence_file(polygon, "mission.fence")
+                
+                self.log("[SUCCESS] Geofence pushed successfully.")
+                status_lbl.config(text="✅ SYNC SUCCESSFUL", foreground="green")
+                messagebox.showinfo("Success", "Geofence pushed successfully!")
+                win.destroy()
+            except Exception as e:
+                self.log(f"[ERROR] Push Failed: {e}")
+                status_lbl.config(text=f"❌ FAILED: {str(e)[:25]}...", foreground="red")
+                messagebox.showerror("Push Error", str(e))
+
+        ttk.Button(config_frame, text="🚀 PUSH TO DRONE", command=on_push, padding=5).pack(fill=tk.X, pady=10)
+        ttk.Button(config_frame, text="CANCEL", command=win.destroy).pack(fill=tk.X, pady=5)
+
+
+
 
     def start_upload_file_thread(self):
+        """Standard method to upload any mission/fence file."""
         path = filedialog.askopenfilename(
-            title="Select Mission File to Upload",
-            filetypes=[("Waypoints", "*.waypoints"), ("Mission Plan", "*.plan"), ("JSON", "*.json"), ("All Files", "*.*")]
+            title="Select Mission or Fence File",
+            filetypes=[("ArduPilot Files", "*.plan *.waypoints *.fence *.json"), ("All Files", "*.*")]
         )
         if not path:
             return
@@ -947,9 +1161,11 @@ class MissionAGROSGUI:
     def upload_file_logic(self, path):
         try:
              conn_str = self.connection_string_var.get()
-             self.log(f"[INFO] Uploading file: {path} to {conn_str}...")
+             baud = self.baudrate_var.get()
+             self.log(f"[INFO] Uploading file: {path} to {conn_str} at {baud}...")
              master = self.scanner.master if self.scanner else None
-             mission_generator.upload_mission_from_file(path, connection_string=conn_str, master=master)
+             mission_generator.upload_mission_from_file(path, connection_string=conn_str, baudrate=baud, master=master)
+
              messagebox.showinfo("Upload", "File Upload Successful!")
              self.log("[SUCCESS] File Upload Complete.")
         except Exception as e:

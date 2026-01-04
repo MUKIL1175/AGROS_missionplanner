@@ -38,7 +38,69 @@ def parse_kml_polygon(kml_path):
         print(f"[ERROR] failed to parse KML: {e}")
         return []
 
+import math
+
+def get_distance_point_to_line(p, l1, l2):
+    """Calculates perpendicular distance from point p to line (l1, l2)."""
+    if l1 == l2:
+        return math.sqrt((p[0]-l1[0])**2 + (p[1]-l1[1])**2)
+    
+    # Standard formula for distance from point to line in 2D
+    numerator = abs((l2[0]-l1[0])*(l1[1]-p[1]) - (l1[0]-p[0])*(l2[1]-l1[1]))
+    denominator = math.sqrt((l2[0]-l1[0])**2 + (l2[1]-l1[1])**2)
+    return numerator / denominator
+
+def simplify_polygon(poly, epsilon=0.00001):
+    """
+    Douglas-Peucker algorithm to simplify a polygon.
+    poly: list of (lat, lon)
+    epsilon: max distance deviation in degrees (~0.00001 deg is ~1.1m)
+    """
+    if len(poly) < 3:
+        return poly
+        
+    dmax = 0
+    index = 0
+    end = len(poly) - 1
+    
+    for i in range(1, end):
+        d = get_distance_point_to_line(poly[i], poly[0], poly[end])
+        if d > dmax:
+            index = i
+            dmax = d
+            
+    if dmax > epsilon:
+        # Recursive call
+        res1 = simplify_polygon(poly[:index+1], epsilon)
+        res2 = simplify_polygon(poly[index:], epsilon)
+        return res1[:-1] + res2
+    else:
+        return [poly[0], poly[end]]
+
+def validate_fence(polygon):
+    """
+    Validates a geofence polygon for ArduPilot compatibility.
+    1. Points must be <= 100.
+    2. Polygon should be closed (last point == first point).
+    """
+    if not polygon:
+        return False, "Empty polygon."
+        
+    # ArduPilot limits
+    if len(polygon) > 100:
+        return False, f"Too many points ({len(polygon)}). Limit is 100."
+        
+    # Check if closed
+    if polygon[0] != polygon[-1]:
+        # mission_generator.upload_fence_mavlink handles closing? 
+        # Actually ArduPilot needs point 0 as return point, then 1..N as vertices.
+        # But for .fence file and consistency, let's track it.
+        pass
+        
+    return True, "OK"
+
 def is_point_in_polygon(lat, lon, polygon):
+
     """
     Ray-casting algorithm to check if a point is inside a polygon.
     polygon: list of (lat, lon) tuples.
@@ -76,7 +138,7 @@ def create_mission_item(command, params, frame=3, auto_continue=True, do_jump_id
         "type": "SimpleItem"
     }
 
-def generate_mp_json(targets):
+def generate_mp_json(targets, travel_alt=10.0, spray_alt=3.0, loiter_time=6.0):
     """
     Generates a Mission Planner compatible JSON structure.
     """
@@ -89,15 +151,14 @@ def generate_mp_json(targets):
     for target in targets:
         lat = target['latitude']
         lon = target['longitude']
-        alt = target.get('spray_altitude', 3)
-        loiter_time = target.get('loiter_time', 6)
+        # Use global params travel_alt, spray_alt, loiter_time
 
-        # 2. Fly to Target (NAV_WAYPOINT = 16)
-        items.append(create_mission_item(16, [0, 0, 0, 0, lat, lon, alt], do_jump_id=jump_id))
+        # 2. Fly to Target (NAV_WAYPOINT = 16) - Travel Alt
+        items.append(create_mission_item(16, [0, 0, 0, 0, lat, lon, travel_alt], do_jump_id=jump_id))
         jump_id += 1
         
-        # 3. Loiter/Spray (NAV_LOITER_TIME = 19)
-        items.append(create_mission_item(19, [loiter_time, 0, 0, 0, lat, lon, alt], do_jump_id=jump_id))
+        # 3. Loiter/Spray (NAV_LOITER_TIME = 19) - Spray Alt
+        items.append(create_mission_item(19, [loiter_time, 0, 0, 0, lat, lon, spray_alt], do_jump_id=jump_id))
         jump_id += 1
 
     # 4. RTL (NAV_RETURN_TO_LAUNCH = 20)
@@ -127,14 +188,20 @@ def generate_mp_json(targets):
     }
     return mission_plan
 
-def upload_mission_mavlink(targets, connection_string='udp:127.0.0.1:14550'):
+def upload_mission_mavlink(targets, connection_string='udp:127.0.0.1:14550', travel_alt=10.0, spray_alt=3.0, loiter_time=6.0, baudrate=115200, master=None):
     """
     Uploads the mission directly to the drone via MAVLink.
     """
-    print(f"[INFO] Connecting to drone at {connection_string}...")
-    # Connection string - adjust if needed (e.g., com port or udp)
-    master = mavutil.mavlink_connection(connection_string)
-    master.wait_heartbeat()
+    # Force MAVLink 2.0
+    os.environ['MAVLINK20'] = '1'
+
+    if master is None:
+        print(f"[INFO] Connecting to drone at {connection_string} (Baud: {baudrate})...")
+        master = mavutil.mavlink_connection(connection_string, baud=baudrate)
+        master.wait_heartbeat()
+    else:
+        print("[INFO] Reusing existing MAVLink connection for mission upload...")
+
     print("[INFO] Connected. Clearing mission...")
 
     master.mav.mission_clear_all_send(master.target_system, master.target_component)
@@ -169,26 +236,25 @@ def upload_mission_mavlink(targets, connection_string='udp:127.0.0.1:14550'):
     for target in targets:
         lat = int(target['latitude'] * 1e7)
         lon = int(target['longitude'] * 1e7)
-        alt = target.get('spray_altitude', 3)
-        loiter_time = target.get('loiter_time', 6)
+        # using global params
         
-        # Fly to Target
+        # Fly to Target (Travel Alt)
         master.mav.mission_item_int_send(
             master.target_system, master.target_component, seq,
             mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
             mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
             0, 1, 0, 0, 0, 0,
-            lat, lon, alt
+            lat, lon, travel_alt
         )
         seq += 1
         
-        # Spray (Loiter Time)
+        # Spray (Loiter Time) (Spray Alt)
         master.mav.mission_item_int_send(
             master.target_system, master.target_component, seq,
             mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
             mavutil.mavlink.MAV_CMD_NAV_LOITER_TIME,
             0, 1, loiter_time, 0, 0, 0,
-            lat, lon, alt
+            lat, lon, spray_alt
         )
         seq += 1
         
@@ -203,12 +269,44 @@ def upload_mission_mavlink(targets, connection_string='udp:127.0.0.1:14550'):
     
     print("[INFO] MAVLink Mission Uploaded Successfully!")
 
-def send_rtl_command(connection_string='udp:127.0.0.1:14550', master=None):
+def save_fence_file(polygon, filename="mission.fence"):
+    """
+    Saves the geofence to a .fence file compatible with Mission Planner.
+    Uses QGC WPL 110 format.
+    - Cmd 5004: Return Point
+    - Cmd 5001: Polygon Vertex (Inclusion)
+    """
+    if not polygon:
+        return
+    
+    count = len(polygon)
+    lines = ["QGC WPL 110"]
+    
+    # ArduPilot .fence format: Index Curr Frame Cmd P1 P2 P3 P4 Lat Lon Alt Auto
+    # 0. Return Point (5004)
+    ret_lat, ret_lon = polygon[0]
+    lines.append(f"0\t0\t0\t5004\t0.000000\t0.000000\t0.000000\t0.000000\t{ret_lat:.8f}\t{ret_lon:.8f}\t0.000000\t1")
+    
+    # 1..N Polygon Vertices (5001)
+    for i, (lat, lon) in enumerate(polygon):
+        # Param 1 = total count of vertices
+        lines.append(f"{i+1}\t0\t0\t5001\t{count:.1f}\t0.000000\t0.000000\t0.000000\t{lat:.8f}\t{lon:.8f}\t0.000000\t1")
+        
+    try:
+        with open(filename, 'w') as f:
+            f.write("\n".join(lines))
+        print(f"[SUCCESS] Fence file saved: {filename}")
+    except Exception as e:
+        print(f"[ERROR] Failed to save fence file: {e}")
+
+def send_rtl_command(connection_string='udp:127.0.0.1:14550', baudrate=115200, master=None):
     """Sends a direct MAVLink command to Return To Launch."""
+    os.environ['MAVLINK20'] = '1'
     if master is None:
-        print(f"[INFO] Sending RTL command to {connection_string}...")
-        master = mavutil.mavlink_connection(connection_string)
+        print(f"[INFO] Sending RTL command to {connection_string} (Baud: {baudrate})...")
+        master = mavutil.mavlink_connection(connection_string, baud=baudrate)
         master.wait_heartbeat()
+
     else:
         print("[INFO] Reusing existing MAVLink connection for RTL...")
     
@@ -219,12 +317,14 @@ def send_rtl_command(connection_string='udp:127.0.0.1:14550', master=None):
     )
     print("[SUCCESS] RTL Command Sent.")
 
-def send_land_command(connection_string='udp:127.0.0.1:14550', master=None):
+def send_land_command(connection_string='udp:127.0.0.1:14550', baudrate=115200, master=None):
     """Sends a direct MAVLink command to Land immediately."""
+    os.environ['MAVLINK20'] = '1'
     if master is None:
-        print(f"[INFO] Sending Land command to {connection_string}...")
-        master = mavutil.mavlink_connection(connection_string)
+        print(f"[INFO] Sending Land command to {connection_string} (Baud: {baudrate})...")
+        master = mavutil.mavlink_connection(connection_string, baud=baudrate)
         master.wait_heartbeat()
+
     else:
         print("[INFO] Reusing existing MAVLink connection for Land...")
 
@@ -235,24 +335,33 @@ def send_land_command(connection_string='udp:127.0.0.1:14550', master=None):
     )
     print("[SUCCESS] Land Command Sent.")
 
-def upload_fence_mavlink(polygon, connection_string='udp:127.0.0.1:14550', master=None):
+def upload_fence_mavlink(polygon, connection_string='udp:127.0.0.1:14550', baudrate=115200, master=None, fence_action=1, fence_type=7, fence_enable=1, fence_alt_max=80, fence_margin=2):
     """
     Uploads a geofence (exclusion/inclusion) via MAVLink.
     Follows ArduPilot FENCE_POINT protocol:
      - Point 0 is the 'Return Point' (safe area inside).
      - Points 1..N are the polygon vertices.
+    Parameters:
+     - fence_action: 0:None, 1:RTL, 2:Hold, 3:SmartRTL, 4:Brake, 5:Land
+     - fence_type: Bitmask (1:Alt, 2:Circle, 4:Polygon). 7 for all.
+     - fence_enable: 0:Disable, 1:Enable
+     - fence_alt_max: Hard altitude limit in meters AGL
+     - fence_margin: Safety buffer in meters
     """
+    os.environ['MAVLINK20'] = '1'
     if not polygon:
         return
+
     
     # ArduPilot expects first point to be Return Point, then vertices.
     # Total count = len(polygon) + 1
     count = len(polygon) + 1
     
     if master is None:
-        print(f"[INFO] Uploading {count} fence points to {connection_string}...")
-        master = mavutil.mavlink_connection(connection_string)
+        print(f"[INFO] Uploading {count} fence points to {connection_string} (Baud: {baudrate})...")
+        master = mavutil.mavlink_connection(connection_string, baud=baudrate)
         master.wait_heartbeat()
+
     else:
         print(f"[INFO] Reusing existing MAVLink connection for {count} fence points...")
 
@@ -285,15 +394,19 @@ def upload_fence_mavlink(polygon, connection_string='udp:127.0.0.1:14550', maste
             name.encode('utf-8'), value, mavutil.mavlink.MAV_PARAM_TYPE_REAL32
         )
 
-    set_param('FENCE_ENABLE', 1)
-    set_param('FENCE_TYPE', 2)    # 2 = Polygon
-    set_param('FENCE_ACTION', 1)  # 1 = RTL
+    set_param('FENCE_ENABLE', fence_enable)
+    set_param('FENCE_TYPE', fence_type)
+    set_param('FENCE_ACTION', fence_action)
+    set_param('FENCE_ALT_MAX', fence_alt_max)
+    set_param('FENCE_MARGIN', fence_margin)
     set_param('FENCE_TOTAL', count)
     
-    print(f"[SUCCESS] Geofence ({count} points) Uploaded and Parameters set.")
+    print(f"[SUCCESS] Geofence ({count} points) Uploaded.")
+    print(f"[SUCCESS] Parameters set -> Enable:{fence_enable}, Type:{fence_type}, Action:{fence_action}, AltMax:{fence_alt_max}m")
+
     print("[TIP] In Mission Planner, go to 'Flight Plan' and ensure 'Fence' is visible, or click 'Get' in the Fence tab.")
 
-def generate_waypoints_content(targets, auto_takeoff=True, completion_action="RTL"):
+def generate_waypoints_content(targets, auto_takeoff=True, completion_action="RTL", travel_alt=10.0, spray_alt=3.0, loiter_time=6.0):
     """
     Generates QGC WPL 110 text format content.
     
@@ -314,21 +427,21 @@ def generate_waypoints_content(targets, auto_takeoff=True, completion_action="RT
     
     # 1. Takeoff (Cmd 22) - only if auto_takeoff is True
     if auto_takeoff:
-        lines.append(f"{seq} 0 3 22 0 0 0 0 0 0 10.000000 1")
+        lines.append(f"{seq} 0 3 22 0 0 0 0 {h_lat:.7f} {h_lon:.7f} 10.000000 1")
         seq += 1
     
     for t in targets:
         lat = float(t['latitude'])
         lon = float(t['longitude'])
-        alt = float(t.get('spray_altitude', 3))
-        loiter = float(t.get('loiter_time', 6))
+        # alt = float(t.get('spray_altitude', 3)) # Superseded by global params
+        # loiter = float(t.get('loiter_time', 6))
         
-        # Fly to (Cmd 16)
-        lines.append(f"{seq} 0 3 16 0 0 0 0 {lat:.7f} {lon:.7f} {alt:.6f} 1")
+        # Fly to (Cmd 16) - Use Travel Altitude
+        lines.append(f"{seq} 0 3 16 0 0 0 0 {lat:.7f} {lon:.7f} {travel_alt:.6f} 1")
         seq += 1
         
-        # Loiter (Cmd 19) - Param 1 is time
-        lines.append(f"{seq} 0 3 19 {loiter:.2f} 0 0 0 {lat:.7f} {lon:.7f} {alt:.6f} 1")
+        # Loiter (Cmd 19) - Param 1 is time, Use Spray Altitude
+        lines.append(f"{seq} 0 3 19 {loiter_time:.2f} 0 0 0 {lat:.7f} {lon:.7f} {spray_alt:.6f} 1")
         seq += 1
     
     # Mission completion action
@@ -381,10 +494,11 @@ def parse_waypoints_file(filepath):
         })
     return items
 
-def upload_mission_from_file(filepath, connection_string='udp:127.0.0.1:14551'):
+def upload_mission_from_file(filepath, connection_string='udp:127.0.0.1:14551', baudrate=115200, master=None):
     """
     Uploads a Mission Planner .plan/.json OR .waypoints file.
     """
+    os.environ['MAVLINK20'] = '1'
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"File not found: {filepath}")
 
@@ -399,10 +513,6 @@ def upload_mission_from_file(filepath, connection_string='udp:127.0.0.1:14551'):
             
     if is_text:
         raw_items = parse_waypoints_file(filepath)
-        # Convert internal dict to structure loop expects below? 
-        # Actually parse_waypoints_file returns dict with 'command', 'frame', 'params'.
-        # The JSON 'items' list also has 'command', 'frame', 'params'.
-        # So compatible!
         items = raw_items
     else:
         # JSON fallback
@@ -414,11 +524,16 @@ def upload_mission_from_file(filepath, connection_string='udp:127.0.0.1:14551'):
         raise ValueError("No mission items found in file.")
 
     print(f"[INFO] Uploading {len(items)} items from {filepath}...")
-    print(f"[INFO] Connecting to drone at {connection_string}...")
-    master = mavutil.mavlink_connection(connection_string)
-    master.wait_heartbeat()
+    
+    if master is None:
+        print(f"[INFO] Connecting to drone at {connection_string} (Baud: {baudrate})...")
+        master = mavutil.mavlink_connection(connection_string, baud=baudrate)
+        master.wait_heartbeat()
+    else:
+        print("[INFO] Reusing existing MAVLink connection for file upload...")
     
     master.mav.mission_clear_all_send(master.target_system, master.target_component)
+
     
     # Count: If text file included Home (Seq 0), we use length.
     # If JSON list included Home? 
