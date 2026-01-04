@@ -1,0 +1,1579 @@
+{
+  "mission_id": "AGRI_MISSION_001",
+  "scan_drone": {
+    "vehicle_id": "SCAN_DRONE_01",
+    "mission_time": "2026-01-04T06:25:37.824614Z",
+    "detections": [
+      {
+        "id": "YELLOW_001",
+        "type": "YELLOW",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude_rel": 0.0,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T07:51:19.371184Z",
+        "image": "detections\\YELLOW_001.jpg"
+      },
+      {
+        "id": "YELLOW_002",
+        "type": "YELLOW",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude_rel": 0.0,
+        "confidence": 0.031,
+        "timestamp": "2026-01-04T07:51:21.387501Z",
+        "image": "detections\\YELLOW_002.jpg"
+      },
+      {
+        "id": "YELLOW_003",
+        "type": "YELLOW",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude_rel": 0.0,
+        "confidence": 0.011,
+        "timestamp": "2026-01-04T07:51:23.401976Z",
+        "image": "detections\\YELLOW_003.jpg"
+      },
+      {
+        "id": "YELLOW_004",
+        "type": "YELLOW",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude_rel": 0.0,
+        "confidence": 0.011,
+        "timestamp": "2026-01-04T07:51:25.547646Z",
+        "image": "detections\\YELLOW_004.jpg"
+      },
+      {
+        "id": "YELLOW_005",
+        "type": "YELLOW",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude_rel": 0.0,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T07:51:27.562417Z",
+        "image": "detections\\YELLOW_005.jpg"
+      },
+      {
+        "id": "YELLOW_006",
+        "type": "YELLOW",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude_rel": 0.0,
+        "confidence": 0.011,
+        "timestamp": "2026-01-04T08:07:47.762661Z",
+        "image": "detections\\YELLOW_006.jpg"
+      },
+      {
+        "id": "YELLOW_007",
+        "type": "YELLOW",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude_rel": 0.0,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T08:07:49.779073Z",
+        "image": "detections\\YELLOW_007.jpg"
+      },
+      {
+        "id": "YELLOW_008",
+        "type": "YELLOW",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude_rel": 0.0,
+        "confidence": 0.024,
+        "timestamp": "2026-01-04T08:07:51.795241Z",
+        "image": "detections\\YELLOW_008.jpg"
+      },
+      {
+        "id": "YELLOW_009",
+        "type": "YELLOW",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude_rel": 0.0,
+        "confidence": 0.047,
+        "timestamp": "2026-01-04T08:07:53.811116Z",
+        "image": "detections\\YELLOW_009.jpg"
+      },
+      {
+        "id": "YELLOW_010",
+        "type": "YELLOW",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude_rel": 0.0,
+        "confidence": 0.052,
+        "timestamp": "2026-01-04T08:07:55.827250Z",
+        "image": "detections\\YELLOW_010.jpg"
+      },
+      {
+        "id": "YELLOW_011",
+        "type": "YELLOW",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "altitude_rel": 0.0,
+        "confidence": 0.061,
+        "timestamp": "2026-01-04T08:07:57.842289Z",
+        "image": "detections\\YELLOW_011.jpg"
+      },
+      {
+        "id": "YELLOW_001",
+        "type": "YELLOW",
+        "latitude": 10.8153374,
+        "longitude": 78.7458959,
+        "altitude_rel": 0.37,
+        "confidence": 0.011,
+        "timestamp": "2026-01-04T10:22:15.346224Z",
+        "image": "detections\\YELLOW_001.jpg"
+      },
+      {
+        "id": "YELLOW_002",
+        "type": "YELLOW",
+        "latitude": 10.815339,
+        "longitude": 78.7458956,
+        "altitude_rel": 0.518,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:22:17.362471Z",
+        "image": "detections\\YELLOW_002.jpg"
+      },
+      {
+        "id": "YELLOW_003",
+        "type": "YELLOW",
+        "latitude": 10.815341,
+        "longitude": 78.7458959,
+        "altitude_rel": 0.549,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:22:19.378762Z",
+        "image": "detections\\YELLOW_003.jpg"
+      },
+      {
+        "id": "YELLOW_004",
+        "type": "YELLOW",
+        "latitude": 10.815341,
+        "longitude": 78.7458954,
+        "altitude_rel": 0.599,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:22:21.394068Z",
+        "image": "detections\\YELLOW_004.jpg"
+      },
+      {
+        "id": "YELLOW_005",
+        "type": "YELLOW",
+        "latitude": 10.8153408,
+        "longitude": 78.7458941,
+        "altitude_rel": 0.64,
+        "confidence": 0.02,
+        "timestamp": "2026-01-04T10:22:23.409817Z",
+        "image": "detections\\YELLOW_005.jpg"
+      },
+      {
+        "id": "YELLOW_006",
+        "type": "YELLOW",
+        "latitude": 10.8153387,
+        "longitude": 78.7458927,
+        "altitude_rel": 0.542,
+        "confidence": 0.02,
+        "timestamp": "2026-01-04T10:22:25.427138Z",
+        "image": "detections\\YELLOW_006.jpg"
+      },
+      {
+        "id": "YELLOW_007",
+        "type": "YELLOW",
+        "latitude": 10.8153349,
+        "longitude": 78.7458911,
+        "altitude_rel": 0.467,
+        "confidence": 0.019,
+        "timestamp": "2026-01-04T10:22:27.442457Z",
+        "image": "detections\\YELLOW_007.jpg"
+      },
+      {
+        "id": "YELLOW_008",
+        "type": "YELLOW",
+        "latitude": 10.8153294,
+        "longitude": 78.745888,
+        "altitude_rel": 0.259,
+        "confidence": 0.02,
+        "timestamp": "2026-01-04T10:22:29.458529Z",
+        "image": "detections\\YELLOW_008.jpg"
+      },
+      {
+        "id": "YELLOW_009",
+        "type": "YELLOW",
+        "latitude": 10.8153269,
+        "longitude": 78.7458864,
+        "altitude_rel": 0.167,
+        "confidence": 0.02,
+        "timestamp": "2026-01-04T10:22:31.474579Z",
+        "image": "detections\\YELLOW_009.jpg"
+      },
+      {
+        "id": "YELLOW_010",
+        "type": "YELLOW",
+        "latitude": 10.8153241,
+        "longitude": 78.7458851,
+        "altitude_rel": 0.228,
+        "confidence": 0.019,
+        "timestamp": "2026-01-04T10:22:33.490871Z",
+        "image": "detections\\YELLOW_010.jpg"
+      },
+      {
+        "id": "YELLOW_011",
+        "type": "YELLOW",
+        "latitude": 10.8153204,
+        "longitude": 78.7458835,
+        "altitude_rel": 0.294,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:22:35.506588Z",
+        "image": "detections\\YELLOW_011.jpg"
+      },
+      {
+        "id": "YELLOW_012",
+        "type": "YELLOW",
+        "latitude": 10.8153176,
+        "longitude": 78.7458826,
+        "altitude_rel": 0.285,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:22:37.522708Z",
+        "image": "detections\\YELLOW_012.jpg"
+      },
+      {
+        "id": "YELLOW_013",
+        "type": "YELLOW",
+        "latitude": 10.8153108,
+        "longitude": 78.7458796,
+        "altitude_rel": 0.19,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:22:39.555412Z",
+        "image": "detections\\YELLOW_013.jpg"
+      },
+      {
+        "id": "YELLOW_014",
+        "type": "YELLOW",
+        "latitude": 10.8153026,
+        "longitude": 78.745877,
+        "altitude_rel": 0.145,
+        "confidence": 0.019,
+        "timestamp": "2026-01-04T10:22:41.571671Z",
+        "image": "detections\\YELLOW_014.jpg"
+      },
+      {
+        "id": "YELLOW_015",
+        "type": "YELLOW",
+        "latitude": 10.8152961,
+        "longitude": 78.745875,
+        "altitude_rel": 0.126,
+        "confidence": 0.019,
+        "timestamp": "2026-01-04T10:22:43.587420Z",
+        "image": "detections\\YELLOW_015.jpg"
+      },
+      {
+        "id": "YELLOW_016",
+        "type": "YELLOW",
+        "latitude": 10.8152902,
+        "longitude": 78.745873,
+        "altitude_rel": 0.164,
+        "confidence": 0.019,
+        "timestamp": "2026-01-04T10:22:45.603400Z",
+        "image": "detections\\YELLOW_016.jpg"
+      },
+      {
+        "id": "YELLOW_017",
+        "type": "YELLOW",
+        "latitude": 10.8152862,
+        "longitude": 78.7458714,
+        "altitude_rel": 0.27,
+        "confidence": 0.019,
+        "timestamp": "2026-01-04T10:22:47.619106Z",
+        "image": "detections\\YELLOW_017.jpg"
+      },
+      {
+        "id": "YELLOW_018",
+        "type": "YELLOW",
+        "latitude": 10.815279,
+        "longitude": 78.745869,
+        "altitude_rel": 0.382,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:22:49.635873Z",
+        "image": "detections\\YELLOW_018.jpg"
+      },
+      {
+        "id": "YELLOW_019",
+        "type": "YELLOW",
+        "latitude": 10.8152731,
+        "longitude": 78.7458663,
+        "altitude_rel": 0.457,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:22:51.652059Z",
+        "image": "detections\\YELLOW_019.jpg"
+      },
+      {
+        "id": "YELLOW_020",
+        "type": "YELLOW",
+        "latitude": 10.815269,
+        "longitude": 78.7458648,
+        "altitude_rel": 0.477,
+        "confidence": 0.017,
+        "timestamp": "2026-01-04T10:22:53.667820Z",
+        "image": "detections\\YELLOW_020.jpg"
+      },
+      {
+        "id": "YELLOW_021",
+        "type": "YELLOW",
+        "latitude": 10.8152658,
+        "longitude": 78.7458629,
+        "altitude_rel": 0.492,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:22:55.683926Z",
+        "image": "detections\\YELLOW_021.jpg"
+      },
+      {
+        "id": "YELLOW_022",
+        "type": "YELLOW",
+        "latitude": 10.8152621,
+        "longitude": 78.745861,
+        "altitude_rel": 0.365,
+        "confidence": 0.017,
+        "timestamp": "2026-01-04T10:22:57.699621Z",
+        "image": "detections\\YELLOW_022.jpg"
+      },
+      {
+        "id": "YELLOW_023",
+        "type": "YELLOW",
+        "latitude": 10.8152568,
+        "longitude": 78.7458593,
+        "altitude_rel": 0.302,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:22:59.715773Z",
+        "image": "detections\\YELLOW_023.jpg"
+      },
+      {
+        "id": "YELLOW_024",
+        "type": "YELLOW",
+        "latitude": 10.8152535,
+        "longitude": 78.7458572,
+        "altitude_rel": 0.159,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:23:01.732368Z",
+        "image": "detections\\YELLOW_024.jpg"
+      },
+      {
+        "id": "YELLOW_025",
+        "type": "YELLOW",
+        "latitude": 10.8152531,
+        "longitude": 78.7458562,
+        "altitude_rel": 0.025,
+        "confidence": 0.016,
+        "timestamp": "2026-01-04T10:23:03.747899Z",
+        "image": "detections\\YELLOW_025.jpg"
+      },
+      {
+        "id": "YELLOW_026",
+        "type": "YELLOW",
+        "latitude": 10.8152555,
+        "longitude": 78.7458554,
+        "altitude_rel": -0.058,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:23:05.763807Z",
+        "image": "detections\\YELLOW_026.jpg"
+      },
+      {
+        "id": "YELLOW_027",
+        "type": "YELLOW",
+        "latitude": 10.8152578,
+        "longitude": 78.7458559,
+        "altitude_rel": 0.005,
+        "confidence": 0.017,
+        "timestamp": "2026-01-04T10:23:07.780547Z",
+        "image": "detections\\YELLOW_027.jpg"
+      },
+      {
+        "id": "YELLOW_028",
+        "type": "YELLOW",
+        "latitude": 10.8152608,
+        "longitude": 78.7458568,
+        "altitude_rel": 0.113,
+        "confidence": 0.017,
+        "timestamp": "2026-01-04T10:23:09.795969Z",
+        "image": "detections\\YELLOW_028.jpg"
+      },
+      {
+        "id": "YELLOW_029",
+        "type": "YELLOW",
+        "latitude": 10.8152622,
+        "longitude": 78.7458572,
+        "altitude_rel": 0.169,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T10:23:11.812159Z",
+        "image": "detections\\YELLOW_029.jpg"
+      },
+      {
+        "id": "YELLOW_030",
+        "type": "YELLOW",
+        "latitude": 10.8152656,
+        "longitude": 78.7458573,
+        "altitude_rel": 0.281,
+        "confidence": 0.015,
+        "timestamp": "2026-01-04T10:23:13.828130Z",
+        "image": "detections\\YELLOW_030.jpg"
+      },
+      {
+        "id": "YELLOW_031",
+        "type": "YELLOW",
+        "latitude": 10.815269,
+        "longitude": 78.7458579,
+        "altitude_rel": 0.274,
+        "confidence": 0.017,
+        "timestamp": "2026-01-04T10:23:15.845180Z",
+        "image": "detections\\YELLOW_031.jpg"
+      },
+      {
+        "id": "YELLOW_032",
+        "type": "YELLOW",
+        "latitude": 10.8152709,
+        "longitude": 78.7458578,
+        "altitude_rel": 0.233,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:23:17.860258Z",
+        "image": "detections\\YELLOW_032.jpg"
+      },
+      {
+        "id": "YELLOW_033",
+        "type": "YELLOW",
+        "latitude": 10.8152733,
+        "longitude": 78.7458579,
+        "altitude_rel": 0.366,
+        "confidence": 0.019,
+        "timestamp": "2026-01-04T10:23:19.876591Z",
+        "image": "detections\\YELLOW_033.jpg"
+      },
+      {
+        "id": "YELLOW_034",
+        "type": "YELLOW",
+        "latitude": 10.8152779,
+        "longitude": 78.7458587,
+        "altitude_rel": 0.379,
+        "confidence": 0.016,
+        "timestamp": "2026-01-04T10:23:21.892577Z",
+        "image": "detections\\YELLOW_034.jpg"
+      },
+      {
+        "id": "YELLOW_035",
+        "type": "YELLOW",
+        "latitude": 10.8152807,
+        "longitude": 78.7458595,
+        "altitude_rel": 0.386,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:23:23.908930Z",
+        "image": "detections\\YELLOW_035.jpg"
+      },
+      {
+        "id": "YELLOW_036",
+        "type": "YELLOW",
+        "latitude": 10.8152825,
+        "longitude": 78.7458594,
+        "altitude_rel": 0.291,
+        "confidence": 0.015,
+        "timestamp": "2026-01-04T10:23:25.940445Z",
+        "image": "detections\\YELLOW_036.jpg"
+      },
+      {
+        "id": "YELLOW_037",
+        "type": "YELLOW",
+        "latitude": 10.8152847,
+        "longitude": 78.7458594,
+        "altitude_rel": 0.253,
+        "confidence": 0.015,
+        "timestamp": "2026-01-04T10:23:27.956525Z",
+        "image": "detections\\YELLOW_037.jpg"
+      },
+      {
+        "id": "YELLOW_038",
+        "type": "YELLOW",
+        "latitude": 10.8152856,
+        "longitude": 78.745859,
+        "altitude_rel": 0.128,
+        "confidence": 0.016,
+        "timestamp": "2026-01-04T10:23:29.972376Z",
+        "image": "detections\\YELLOW_038.jpg"
+      },
+      {
+        "id": "YELLOW_039",
+        "type": "YELLOW",
+        "latitude": 10.815288,
+        "longitude": 78.7458585,
+        "altitude_rel": 0.084,
+        "confidence": 0.014,
+        "timestamp": "2026-01-04T10:23:32.020952Z",
+        "image": "detections\\YELLOW_039.jpg"
+      },
+      {
+        "id": "YELLOW_040",
+        "type": "YELLOW",
+        "latitude": 10.8152922,
+        "longitude": 78.7458601,
+        "altitude_rel": 0.165,
+        "confidence": 0.014,
+        "timestamp": "2026-01-04T10:23:34.036566Z",
+        "image": "detections\\YELLOW_040.jpg"
+      },
+      {
+        "id": "YELLOW_041",
+        "type": "YELLOW",
+        "latitude": 10.815296,
+        "longitude": 78.7458615,
+        "altitude_rel": 0.15,
+        "confidence": 0.014,
+        "timestamp": "2026-01-04T10:23:36.053287Z",
+        "image": "detections\\YELLOW_041.jpg"
+      },
+      {
+        "id": "YELLOW_042",
+        "type": "YELLOW",
+        "latitude": 10.8152994,
+        "longitude": 78.7458631,
+        "altitude_rel": 0.038,
+        "confidence": 0.014,
+        "timestamp": "2026-01-04T10:23:38.069488Z",
+        "image": "detections\\YELLOW_042.jpg"
+      },
+      {
+        "id": "YELLOW_043",
+        "type": "YELLOW",
+        "latitude": 10.8153013,
+        "longitude": 78.745864,
+        "altitude_rel": -0.018,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T10:23:40.085313Z",
+        "image": "detections\\YELLOW_043.jpg"
+      },
+      {
+        "id": "YELLOW_044",
+        "type": "YELLOW",
+        "latitude": 10.8153029,
+        "longitude": 78.7458646,
+        "altitude_rel": -0.092,
+        "confidence": 0.014,
+        "timestamp": "2026-01-04T10:23:42.101309Z",
+        "image": "detections\\YELLOW_044.jpg"
+      },
+      {
+        "id": "YELLOW_045",
+        "type": "YELLOW",
+        "latitude": 10.8153075,
+        "longitude": 78.7458666,
+        "altitude_rel": -0.076,
+        "confidence": 0.014,
+        "timestamp": "2026-01-04T10:23:44.116800Z",
+        "image": "detections\\YELLOW_045.jpg"
+      },
+      {
+        "id": "YELLOW_046",
+        "type": "YELLOW",
+        "latitude": 10.8153117,
+        "longitude": 78.7458682,
+        "altitude_rel": 0.037,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T10:23:46.132860Z",
+        "image": "detections\\YELLOW_046.jpg"
+      },
+      {
+        "id": "YELLOW_047",
+        "type": "YELLOW",
+        "latitude": 10.8153159,
+        "longitude": 78.7458703,
+        "altitude_rel": 0.075,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T10:23:48.149370Z",
+        "image": "detections\\YELLOW_047.jpg"
+      },
+      {
+        "id": "YELLOW_048",
+        "type": "YELLOW",
+        "latitude": 10.8153183,
+        "longitude": 78.7458715,
+        "altitude_rel": 0.021,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T10:23:50.165185Z",
+        "image": "detections\\YELLOW_048.jpg"
+      },
+      {
+        "id": "YELLOW_049",
+        "type": "YELLOW",
+        "latitude": 10.8153221,
+        "longitude": 78.7458726,
+        "altitude_rel": -0.008,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T10:23:52.181395Z",
+        "image": "detections\\YELLOW_049.jpg"
+      },
+      {
+        "id": "YELLOW_050",
+        "type": "YELLOW",
+        "latitude": 10.8153255,
+        "longitude": 78.745874,
+        "altitude_rel": 0.033,
+        "confidence": 0.014,
+        "timestamp": "2026-01-04T10:23:54.197237Z",
+        "image": "detections\\YELLOW_050.jpg"
+      },
+      {
+        "id": "YELLOW_051",
+        "type": "YELLOW",
+        "latitude": 10.8153292,
+        "longitude": 78.7458757,
+        "altitude_rel": 0.096,
+        "confidence": 0.014,
+        "timestamp": "2026-01-04T10:23:56.277484Z",
+        "image": "detections\\YELLOW_051.jpg"
+      },
+      {
+        "id": "YELLOW_052",
+        "type": "YELLOW",
+        "latitude": 10.8153314,
+        "longitude": 78.7458767,
+        "altitude_rel": 0.148,
+        "confidence": 0.01,
+        "timestamp": "2026-01-04T10:23:58.501733Z",
+        "image": "detections\\YELLOW_052.jpg"
+      },
+      {
+        "id": "YELLOW_053",
+        "type": "YELLOW",
+        "latitude": 10.815333,
+        "longitude": 78.7458775,
+        "altitude_rel": -0.005,
+        "confidence": 0.01,
+        "timestamp": "2026-01-04T10:24:00.677962Z",
+        "image": "detections\\YELLOW_053.jpg"
+      },
+      {
+        "id": "YELLOW_054",
+        "type": "YELLOW",
+        "latitude": 10.8153395,
+        "longitude": 78.7458849,
+        "altitude_rel": -0.128,
+        "confidence": 0.017,
+        "timestamp": "2026-01-04T10:24:17.606279Z",
+        "image": "detections\\YELLOW_054.jpg"
+      },
+      {
+        "id": "YELLOW_055",
+        "type": "YELLOW",
+        "latitude": 10.8153421,
+        "longitude": 78.7458873,
+        "altitude_rel": -0.011,
+        "confidence": 0.015,
+        "timestamp": "2026-01-04T10:24:19.622874Z",
+        "image": "detections\\YELLOW_055.jpg"
+      },
+      {
+        "id": "YELLOW_056",
+        "type": "YELLOW",
+        "latitude": 10.815343,
+        "longitude": 78.7458887,
+        "altitude_rel": -0.104,
+        "confidence": 0.015,
+        "timestamp": "2026-01-04T10:24:21.638030Z",
+        "image": "detections\\YELLOW_056.jpg"
+      },
+      {
+        "id": "YELLOW_057",
+        "type": "YELLOW",
+        "latitude": 10.8153456,
+        "longitude": 78.7458902,
+        "altitude_rel": -0.153,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T10:24:23.654240Z",
+        "image": "detections\\YELLOW_057.jpg"
+      },
+      {
+        "id": "YELLOW_058",
+        "type": "YELLOW",
+        "latitude": 10.8153458,
+        "longitude": 78.7458905,
+        "altitude_rel": -0.263,
+        "confidence": 0.012,
+        "timestamp": "2026-01-04T10:24:25.671049Z",
+        "image": "detections\\YELLOW_058.jpg"
+      },
+      {
+        "id": "YELLOW_059",
+        "type": "YELLOW",
+        "latitude": 10.8153476,
+        "longitude": 78.7458916,
+        "altitude_rel": -0.269,
+        "confidence": 0.012,
+        "timestamp": "2026-01-04T10:24:27.686394Z",
+        "image": "detections\\YELLOW_059.jpg"
+      },
+      {
+        "id": "YELLOW_060",
+        "type": "YELLOW",
+        "latitude": 10.8153504,
+        "longitude": 78.7458927,
+        "altitude_rel": -0.172,
+        "confidence": 0.012,
+        "timestamp": "2026-01-04T10:24:29.702452Z",
+        "image": "detections\\YELLOW_060.jpg"
+      },
+      {
+        "id": "YELLOW_061",
+        "type": "YELLOW",
+        "latitude": 10.8153497,
+        "longitude": 78.7458924,
+        "altitude_rel": -0.107,
+        "confidence": 0.012,
+        "timestamp": "2026-01-04T10:24:31.718147Z",
+        "image": "detections\\YELLOW_061.jpg"
+      },
+      {
+        "id": "YELLOW_062",
+        "type": "YELLOW",
+        "latitude": 10.8153487,
+        "longitude": 78.7458911,
+        "altitude_rel": -0.085,
+        "confidence": 0.012,
+        "timestamp": "2026-01-04T10:24:33.749707Z",
+        "image": "detections\\YELLOW_062.jpg"
+      },
+      {
+        "id": "YELLOW_063",
+        "type": "YELLOW",
+        "latitude": 10.8153487,
+        "longitude": 78.7458909,
+        "altitude_rel": -0.057,
+        "confidence": 0.011,
+        "timestamp": "2026-01-04T10:24:35.766350Z",
+        "image": "detections\\YELLOW_063.jpg"
+      },
+      {
+        "id": "YELLOW_064",
+        "type": "YELLOW",
+        "latitude": 10.8153494,
+        "longitude": 78.745891,
+        "altitude_rel": 0.033,
+        "confidence": 0.012,
+        "timestamp": "2026-01-04T10:24:37.782870Z",
+        "image": "detections\\YELLOW_064.jpg"
+      },
+      {
+        "id": "YELLOW_065",
+        "type": "YELLOW",
+        "latitude": 10.8153503,
+        "longitude": 78.7458899,
+        "altitude_rel": 0.007,
+        "confidence": 0.011,
+        "timestamp": "2026-01-04T10:24:39.798488Z",
+        "image": "detections\\YELLOW_065.jpg"
+      },
+      {
+        "id": "YELLOW_066",
+        "type": "YELLOW",
+        "latitude": 10.8153493,
+        "longitude": 78.7458901,
+        "altitude_rel": -0.038,
+        "confidence": 0.01,
+        "timestamp": "2026-01-04T10:24:41.814871Z",
+        "image": "detections\\YELLOW_066.jpg"
+      },
+      {
+        "id": "YELLOW_067",
+        "type": "YELLOW",
+        "latitude": 10.815349,
+        "longitude": 78.7458896,
+        "altitude_rel": -0.173,
+        "confidence": 0.011,
+        "timestamp": "2026-01-04T10:24:43.831040Z",
+        "image": "detections\\YELLOW_067.jpg"
+      },
+      {
+        "id": "YELLOW_068",
+        "type": "YELLOW",
+        "latitude": 10.8153491,
+        "longitude": 78.7458897,
+        "altitude_rel": -0.179,
+        "confidence": 0.011,
+        "timestamp": "2026-01-04T10:24:45.846496Z",
+        "image": "detections\\YELLOW_068.jpg"
+      },
+      {
+        "id": "YELLOW_069",
+        "type": "YELLOW",
+        "latitude": 10.8153487,
+        "longitude": 78.7458903,
+        "altitude_rel": -0.218,
+        "confidence": 0.01,
+        "timestamp": "2026-01-04T10:24:47.862262Z",
+        "image": "detections\\YELLOW_069.jpg"
+      },
+      {
+        "id": "YELLOW_070",
+        "type": "YELLOW",
+        "latitude": 10.8153473,
+        "longitude": 78.7458907,
+        "altitude_rel": -0.388,
+        "confidence": 0.011,
+        "timestamp": "2026-01-04T10:24:49.878702Z",
+        "image": "detections\\YELLOW_070.jpg"
+      },
+      {
+        "id": "YELLOW_071",
+        "type": "YELLOW",
+        "latitude": 10.8153482,
+        "longitude": 78.7458918,
+        "altitude_rel": -0.175,
+        "confidence": 0.014,
+        "timestamp": "2026-01-04T10:24:51.895985Z",
+        "image": "detections\\YELLOW_071.jpg"
+      },
+      {
+        "id": "YELLOW_072",
+        "type": "YELLOW",
+        "latitude": 10.8153473,
+        "longitude": 78.7458918,
+        "altitude_rel": 0.039,
+        "confidence": 0.016,
+        "timestamp": "2026-01-04T10:24:53.911395Z",
+        "image": "detections\\YELLOW_072.jpg"
+      },
+      {
+        "id": "YELLOW_073",
+        "type": "YELLOW",
+        "latitude": 10.8153454,
+        "longitude": 78.7458913,
+        "altitude_rel": 0.062,
+        "confidence": 0.016,
+        "timestamp": "2026-01-04T10:24:55.927840Z",
+        "image": "detections\\YELLOW_073.jpg"
+      },
+      {
+        "id": "YELLOW_074",
+        "type": "YELLOW",
+        "latitude": 10.8153446,
+        "longitude": 78.7458914,
+        "altitude_rel": 0.068,
+        "confidence": 0.015,
+        "timestamp": "2026-01-04T10:24:57.944128Z",
+        "image": "detections\\YELLOW_074.jpg"
+      },
+      {
+        "id": "YELLOW_075",
+        "type": "YELLOW",
+        "latitude": 10.8153449,
+        "longitude": 78.7458926,
+        "altitude_rel": 0.094,
+        "confidence": 0.016,
+        "timestamp": "2026-01-04T10:24:59.959111Z",
+        "image": "detections\\YELLOW_075.jpg"
+      },
+      {
+        "id": "YELLOW_076",
+        "type": "YELLOW",
+        "latitude": 10.815347,
+        "longitude": 78.7458962,
+        "altitude_rel": 0.161,
+        "confidence": 0.016,
+        "timestamp": "2026-01-04T10:25:01.976064Z",
+        "image": "detections\\YELLOW_076.jpg"
+      },
+      {
+        "id": "YELLOW_077",
+        "type": "YELLOW",
+        "latitude": 10.8153502,
+        "longitude": 78.7459015,
+        "altitude_rel": 0.334,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:25:03.991651Z",
+        "image": "detections\\YELLOW_077.jpg"
+      },
+      {
+        "id": "YELLOW_078",
+        "type": "YELLOW",
+        "latitude": 10.8153513,
+        "longitude": 78.7459063,
+        "altitude_rel": 0.445,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:25:06.008123Z",
+        "image": "detections\\YELLOW_078.jpg"
+      },
+      {
+        "id": "YELLOW_079",
+        "type": "YELLOW",
+        "latitude": 10.8153533,
+        "longitude": 78.7459103,
+        "altitude_rel": 0.447,
+        "confidence": 0.015,
+        "timestamp": "2026-01-04T10:25:08.024021Z",
+        "image": "detections\\YELLOW_079.jpg"
+      },
+      {
+        "id": "YELLOW_080",
+        "type": "YELLOW",
+        "latitude": 10.8153563,
+        "longitude": 78.7459128,
+        "altitude_rel": 0.316,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T10:25:10.040368Z",
+        "image": "detections\\YELLOW_080.jpg"
+      },
+      {
+        "id": "YELLOW_081",
+        "type": "YELLOW",
+        "latitude": 10.8153595,
+        "longitude": 78.7459093,
+        "altitude_rel": -0.307,
+        "confidence": 0.027,
+        "timestamp": "2026-01-04T10:25:12.056219Z",
+        "image": "detections\\YELLOW_081.jpg"
+      },
+      {
+        "id": "YELLOW_082",
+        "type": "YELLOW",
+        "latitude": 10.8153599,
+        "longitude": 78.7459084,
+        "altitude_rel": -0.282,
+        "confidence": 0.017,
+        "timestamp": "2026-01-04T10:25:14.071646Z",
+        "image": "detections\\YELLOW_082.jpg"
+      },
+      {
+        "id": "YELLOW_083",
+        "type": "YELLOW",
+        "latitude": 10.8153569,
+        "longitude": 78.7459033,
+        "altitude_rel": -0.6,
+        "confidence": 0.016,
+        "timestamp": "2026-01-04T10:25:16.088563Z",
+        "image": "detections\\YELLOW_083.jpg"
+      },
+      {
+        "id": "YELLOW_084",
+        "type": "YELLOW",
+        "latitude": 10.8153523,
+        "longitude": 78.745896,
+        "altitude_rel": -0.822,
+        "confidence": 0.016,
+        "timestamp": "2026-01-04T10:25:18.103885Z",
+        "image": "detections\\YELLOW_084.jpg"
+      },
+      {
+        "id": "YELLOW_085",
+        "type": "YELLOW",
+        "latitude": 10.8153441,
+        "longitude": 78.7458887,
+        "altitude_rel": -0.83,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T10:25:20.264846Z",
+        "image": "detections\\YELLOW_085.jpg"
+      },
+      {
+        "id": "YELLOW_086",
+        "type": "YELLOW",
+        "latitude": 10.8153402,
+        "longitude": 78.7458849,
+        "altitude_rel": -0.05,
+        "confidence": 0.026,
+        "timestamp": "2026-01-04T10:25:22.280267Z",
+        "image": "detections\\YELLOW_086.jpg"
+      },
+      {
+        "id": "YELLOW_087",
+        "type": "YELLOW",
+        "latitude": 10.8153367,
+        "longitude": 78.7458829,
+        "altitude_rel": -0.028,
+        "confidence": 0.023,
+        "timestamp": "2026-01-04T10:25:24.296648Z",
+        "image": "detections\\YELLOW_087.jpg"
+      },
+      {
+        "id": "YELLOW_088",
+        "type": "YELLOW",
+        "latitude": 10.8153345,
+        "longitude": 78.7458805,
+        "altitude_rel": 0.032,
+        "confidence": 0.023,
+        "timestamp": "2026-01-04T10:25:26.312767Z",
+        "image": "detections\\YELLOW_088.jpg"
+      },
+      {
+        "id": "YELLOW_089",
+        "type": "YELLOW",
+        "latitude": 10.8153321,
+        "longitude": 78.7458796,
+        "altitude_rel": 0.077,
+        "confidence": 0.022,
+        "timestamp": "2026-01-04T10:25:28.328555Z",
+        "image": "detections\\YELLOW_089.jpg"
+      },
+      {
+        "id": "YELLOW_090",
+        "type": "YELLOW",
+        "latitude": 10.8153304,
+        "longitude": 78.7458778,
+        "altitude_rel": 0.085,
+        "confidence": 0.021,
+        "timestamp": "2026-01-04T10:25:30.345613Z",
+        "image": "detections\\YELLOW_090.jpg"
+      },
+      {
+        "id": "YELLOW_091",
+        "type": "YELLOW",
+        "latitude": 10.8153295,
+        "longitude": 78.7458774,
+        "altitude_rel": 0.099,
+        "confidence": 0.02,
+        "timestamp": "2026-01-04T10:25:32.360151Z",
+        "image": "detections\\YELLOW_091.jpg"
+      },
+      {
+        "id": "YELLOW_092",
+        "type": "YELLOW",
+        "latitude": 10.8153286,
+        "longitude": 78.7458782,
+        "altitude_rel": 0.018,
+        "confidence": 0.02,
+        "timestamp": "2026-01-04T10:25:34.376758Z",
+        "image": "detections\\YELLOW_092.jpg"
+      },
+      {
+        "id": "YELLOW_093",
+        "type": "YELLOW",
+        "latitude": 10.8153287,
+        "longitude": 78.7458786,
+        "altitude_rel": 0.078,
+        "confidence": 0.019,
+        "timestamp": "2026-01-04T10:25:36.392696Z",
+        "image": "detections\\YELLOW_093.jpg"
+      },
+      {
+        "id": "YELLOW_094",
+        "type": "YELLOW",
+        "latitude": 10.8153296,
+        "longitude": 78.7458786,
+        "altitude_rel": 0.11,
+        "confidence": 0.021,
+        "timestamp": "2026-01-04T10:25:38.408557Z",
+        "image": "detections\\YELLOW_094.jpg"
+      },
+      {
+        "id": "YELLOW_095",
+        "type": "YELLOW",
+        "latitude": 10.8153293,
+        "longitude": 78.7458786,
+        "altitude_rel": 0.12,
+        "confidence": 0.021,
+        "timestamp": "2026-01-04T10:25:40.425142Z",
+        "image": "detections\\YELLOW_095.jpg"
+      },
+      {
+        "id": "YELLOW_096",
+        "type": "YELLOW",
+        "latitude": 10.8153298,
+        "longitude": 78.7458775,
+        "altitude_rel": 0.047,
+        "confidence": 0.024,
+        "timestamp": "2026-01-04T10:25:42.441383Z",
+        "image": "detections\\YELLOW_096.jpg"
+      },
+      {
+        "id": "YELLOW_097",
+        "type": "YELLOW",
+        "latitude": 10.8153286,
+        "longitude": 78.7458776,
+        "altitude_rel": -0.033,
+        "confidence": 0.023,
+        "timestamp": "2026-01-04T10:25:44.456563Z",
+        "image": "detections\\YELLOW_097.jpg"
+      },
+      {
+        "id": "YELLOW_098",
+        "type": "YELLOW",
+        "latitude": 10.8153279,
+        "longitude": 78.7458777,
+        "altitude_rel": -0.097,
+        "confidence": 0.021,
+        "timestamp": "2026-01-04T10:25:46.473032Z",
+        "image": "detections\\YELLOW_098.jpg"
+      },
+      {
+        "id": "YELLOW_099",
+        "type": "YELLOW",
+        "latitude": 10.8153267,
+        "longitude": 78.7458784,
+        "altitude_rel": -0.174,
+        "confidence": 0.017,
+        "timestamp": "2026-01-04T10:25:48.489545Z",
+        "image": "detections\\YELLOW_099.jpg"
+      },
+      {
+        "id": "YELLOW_100",
+        "type": "YELLOW",
+        "latitude": 10.8153265,
+        "longitude": 78.7458793,
+        "altitude_rel": -0.15,
+        "confidence": 0.023,
+        "timestamp": "2026-01-04T10:25:50.506002Z",
+        "image": "detections\\YELLOW_100.jpg"
+      },
+      {
+        "id": "YELLOW_101",
+        "type": "YELLOW",
+        "latitude": 10.8153262,
+        "longitude": 78.7458806,
+        "altitude_rel": -0.137,
+        "confidence": 0.021,
+        "timestamp": "2026-01-04T10:25:52.537345Z",
+        "image": "detections\\YELLOW_101.jpg"
+      },
+      {
+        "id": "YELLOW_102",
+        "type": "YELLOW",
+        "latitude": 10.8153243,
+        "longitude": 78.7458827,
+        "altitude_rel": -0.225,
+        "confidence": 0.02,
+        "timestamp": "2026-01-04T10:25:54.552906Z",
+        "image": "detections\\YELLOW_102.jpg"
+      },
+      {
+        "id": "YELLOW_103",
+        "type": "YELLOW",
+        "latitude": 10.8153229,
+        "longitude": 78.7458849,
+        "altitude_rel": -0.398,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:25:56.569280Z",
+        "image": "detections\\YELLOW_103.jpg"
+      },
+      {
+        "id": "YELLOW_104",
+        "type": "YELLOW",
+        "latitude": 10.8153225,
+        "longitude": 78.7458861,
+        "altitude_rel": -0.565,
+        "confidence": 0.017,
+        "timestamp": "2026-01-04T10:25:58.585374Z",
+        "image": "detections\\YELLOW_104.jpg"
+      },
+      {
+        "id": "YELLOW_105",
+        "type": "YELLOW",
+        "latitude": 10.8153222,
+        "longitude": 78.7458865,
+        "altitude_rel": -0.649,
+        "confidence": 0.017,
+        "timestamp": "2026-01-04T10:26:00.601989Z",
+        "image": "detections\\YELLOW_105.jpg"
+      },
+      {
+        "id": "YELLOW_106",
+        "type": "YELLOW",
+        "latitude": 10.8153224,
+        "longitude": 78.7458868,
+        "altitude_rel": -0.731,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:26:02.617263Z",
+        "image": "detections\\YELLOW_106.jpg"
+      },
+      {
+        "id": "YELLOW_107",
+        "type": "YELLOW",
+        "latitude": 10.8153222,
+        "longitude": 78.7458871,
+        "altitude_rel": -0.759,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:26:04.634037Z",
+        "image": "detections\\YELLOW_107.jpg"
+      },
+      {
+        "id": "YELLOW_108",
+        "type": "YELLOW",
+        "latitude": 10.8153213,
+        "longitude": 78.7458875,
+        "altitude_rel": -0.751,
+        "confidence": 0.019,
+        "timestamp": "2026-01-04T10:26:06.650202Z",
+        "image": "detections\\YELLOW_108.jpg"
+      },
+      {
+        "id": "YELLOW_109",
+        "type": "YELLOW",
+        "latitude": 10.8153214,
+        "longitude": 78.7458876,
+        "altitude_rel": -0.786,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:26:08.666240Z",
+        "image": "detections\\YELLOW_109.jpg"
+      },
+      {
+        "id": "YELLOW_110",
+        "type": "YELLOW",
+        "latitude": 10.8153215,
+        "longitude": 78.7458879,
+        "altitude_rel": -1.051,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:26:10.681702Z",
+        "image": "detections\\YELLOW_110.jpg"
+      },
+      {
+        "id": "YELLOW_111",
+        "type": "YELLOW",
+        "latitude": 10.8153215,
+        "longitude": 78.7458881,
+        "altitude_rel": -1.015,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:26:12.697890Z",
+        "image": "detections\\YELLOW_111.jpg"
+      },
+      {
+        "id": "YELLOW_112",
+        "type": "YELLOW",
+        "latitude": 10.8153219,
+        "longitude": 78.745888,
+        "altitude_rel": -0.965,
+        "confidence": 0.019,
+        "timestamp": "2026-01-04T10:26:14.713952Z",
+        "image": "detections\\YELLOW_112.jpg"
+      },
+      {
+        "id": "YELLOW_113",
+        "type": "YELLOW",
+        "latitude": 10.8153231,
+        "longitude": 78.7458876,
+        "altitude_rel": -0.845,
+        "confidence": 0.019,
+        "timestamp": "2026-01-04T10:26:16.729372Z",
+        "image": "detections\\YELLOW_113.jpg"
+      },
+      {
+        "id": "YELLOW_114",
+        "type": "YELLOW",
+        "latitude": 10.8153226,
+        "longitude": 78.7458883,
+        "altitude_rel": -0.763,
+        "confidence": 0.02,
+        "timestamp": "2026-01-04T10:26:18.746234Z",
+        "image": "detections\\YELLOW_114.jpg"
+      },
+      {
+        "id": "YELLOW_115",
+        "type": "YELLOW",
+        "latitude": 10.8153232,
+        "longitude": 78.7458882,
+        "altitude_rel": -0.715,
+        "confidence": 0.018,
+        "timestamp": "2026-01-04T10:26:20.762356Z",
+        "image": "detections\\YELLOW_115.jpg"
+      },
+      {
+        "id": "YELLOW_116",
+        "type": "YELLOW",
+        "latitude": 10.8153229,
+        "longitude": 78.7458885,
+        "altitude_rel": -0.699,
+        "confidence": 0.015,
+        "timestamp": "2026-01-04T10:26:22.778961Z",
+        "image": "detections\\YELLOW_116.jpg"
+      },
+      {
+        "id": "YELLOW_117",
+        "type": "YELLOW",
+        "latitude": 10.8153217,
+        "longitude": 78.745889,
+        "altitude_rel": -0.73,
+        "confidence": 0.015,
+        "timestamp": "2026-01-04T10:26:24.794147Z",
+        "image": "detections\\YELLOW_117.jpg"
+      },
+      {
+        "id": "YELLOW_118",
+        "type": "YELLOW",
+        "latitude": 10.8153204,
+        "longitude": 78.7458891,
+        "altitude_rel": -0.821,
+        "confidence": 0.014,
+        "timestamp": "2026-01-04T10:26:26.810239Z",
+        "image": "detections\\YELLOW_118.jpg"
+      },
+      {
+        "id": "YELLOW_119",
+        "type": "YELLOW",
+        "latitude": 10.8153203,
+        "longitude": 78.7458891,
+        "altitude_rel": -0.959,
+        "confidence": 0.012,
+        "timestamp": "2026-01-04T10:26:28.826771Z",
+        "image": "detections\\YELLOW_119.jpg"
+      },
+      {
+        "id": "YELLOW_120",
+        "type": "YELLOW",
+        "latitude": 10.8153201,
+        "longitude": 78.745889,
+        "altitude_rel": -0.996,
+        "confidence": 0.012,
+        "timestamp": "2026-01-04T10:26:30.841799Z",
+        "image": "detections\\YELLOW_120.jpg"
+      },
+      {
+        "id": "YELLOW_121",
+        "type": "YELLOW",
+        "latitude": 10.8153202,
+        "longitude": 78.7458892,
+        "altitude_rel": -0.989,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T10:26:32.858418Z",
+        "image": "detections\\YELLOW_121.jpg"
+      },
+      {
+        "id": "YELLOW_122",
+        "type": "YELLOW",
+        "latitude": 10.8153206,
+        "longitude": 78.7458892,
+        "altitude_rel": -0.997,
+        "confidence": 0.012,
+        "timestamp": "2026-01-04T10:26:34.874485Z",
+        "image": "detections\\YELLOW_122.jpg"
+      },
+      {
+        "id": "YELLOW_123",
+        "type": "YELLOW",
+        "latitude": 10.8153194,
+        "longitude": 78.7458901,
+        "altitude_rel": -1.073,
+        "confidence": 0.015,
+        "timestamp": "2026-01-04T10:26:36.890736Z",
+        "image": "detections\\YELLOW_123.jpg"
+      },
+      {
+        "id": "YELLOW_124",
+        "type": "YELLOW",
+        "latitude": 10.8153181,
+        "longitude": 78.7458907,
+        "altitude_rel": -1.166,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T10:26:38.922035Z",
+        "image": "detections\\YELLOW_124.jpg"
+      },
+      {
+        "id": "YELLOW_125",
+        "type": "YELLOW",
+        "latitude": 10.815318,
+        "longitude": 78.7458906,
+        "altitude_rel": -1.321,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T10:26:40.938969Z",
+        "image": "detections\\YELLOW_125.jpg"
+      },
+      {
+        "id": "YELLOW_126",
+        "type": "YELLOW",
+        "latitude": 10.8153184,
+        "longitude": 78.7458913,
+        "altitude_rel": -1.246,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T10:26:42.954640Z",
+        "image": "detections\\YELLOW_126.jpg"
+      },
+      {
+        "id": "YELLOW_127",
+        "type": "YELLOW",
+        "latitude": 10.8153188,
+        "longitude": 78.7458911,
+        "altitude_rel": -0.933,
+        "confidence": 0.016,
+        "timestamp": "2026-01-04T10:26:44.970945Z",
+        "image": "detections\\YELLOW_127.jpg"
+      },
+      {
+        "id": "YELLOW_128",
+        "type": "YELLOW",
+        "latitude": 10.8153193,
+        "longitude": 78.7458901,
+        "altitude_rel": -0.858,
+        "confidence": 0.016,
+        "timestamp": "2026-01-04T10:26:46.986415Z",
+        "image": "detections\\YELLOW_128.jpg"
+      },
+      {
+        "id": "YELLOW_129",
+        "type": "YELLOW",
+        "latitude": 10.8153196,
+        "longitude": 78.745889,
+        "altitude_rel": -0.917,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T10:26:49.002457Z",
+        "image": "detections\\YELLOW_129.jpg"
+      },
+      {
+        "id": "YELLOW_130",
+        "type": "YELLOW",
+        "latitude": 10.8153193,
+        "longitude": 78.7458875,
+        "altitude_rel": -1.014,
+        "confidence": 0.015,
+        "timestamp": "2026-01-04T10:26:51.018747Z",
+        "image": "detections\\YELLOW_130.jpg"
+      },
+      {
+        "id": "YELLOW_131",
+        "type": "YELLOW",
+        "latitude": 10.8153192,
+        "longitude": 78.7458858,
+        "altitude_rel": -1.036,
+        "confidence": 0.015,
+        "timestamp": "2026-01-04T10:26:53.035051Z",
+        "image": "detections\\YELLOW_131.jpg"
+      },
+      {
+        "id": "YELLOW_132",
+        "type": "YELLOW",
+        "latitude": 10.8153204,
+        "longitude": 78.7458832,
+        "altitude_rel": -1.075,
+        "confidence": 0.012,
+        "timestamp": "2026-01-04T10:26:55.051109Z",
+        "image": "detections\\YELLOW_132.jpg"
+      },
+      {
+        "id": "YELLOW_133",
+        "type": "YELLOW",
+        "latitude": 10.8153214,
+        "longitude": 78.7458808,
+        "altitude_rel": -1.096,
+        "confidence": 0.016,
+        "timestamp": "2026-01-04T10:26:57.066578Z",
+        "image": "detections\\YELLOW_133.jpg"
+      },
+      {
+        "id": "YELLOW_134",
+        "type": "YELLOW",
+        "latitude": 10.8153221,
+        "longitude": 78.7458791,
+        "altitude_rel": -1.115,
+        "confidence": 0.015,
+        "timestamp": "2026-01-04T10:26:59.083349Z",
+        "image": "detections\\YELLOW_134.jpg"
+      },
+      {
+        "id": "YELLOW_135",
+        "type": "YELLOW",
+        "latitude": 10.8153231,
+        "longitude": 78.7458784,
+        "altitude_rel": -1.096,
+        "confidence": 0.014,
+        "timestamp": "2026-01-04T10:27:01.099431Z",
+        "image": "detections\\YELLOW_135.jpg"
+      },
+      {
+        "id": "YELLOW_136",
+        "type": "YELLOW",
+        "latitude": 10.8153238,
+        "longitude": 78.7458762,
+        "altitude_rel": -1.191,
+        "confidence": 0.014,
+        "timestamp": "2026-01-04T10:27:03.115391Z",
+        "image": "detections\\YELLOW_136.jpg"
+      },
+      {
+        "id": "YELLOW_137",
+        "type": "YELLOW",
+        "latitude": 10.8153234,
+        "longitude": 78.7458735,
+        "altitude_rel": -1.298,
+        "confidence": 0.014,
+        "timestamp": "2026-01-04T10:27:05.131106Z",
+        "image": "detections\\YELLOW_137.jpg"
+      },
+      {
+        "id": "YELLOW_138",
+        "type": "YELLOW",
+        "latitude": 10.8153231,
+        "longitude": 78.7458719,
+        "altitude_rel": -1.314,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T10:27:07.146993Z",
+        "image": "detections\\YELLOW_138.jpg"
+      },
+      {
+        "id": "YELLOW_139",
+        "type": "YELLOW",
+        "latitude": 10.8153228,
+        "longitude": 78.7458703,
+        "altitude_rel": -1.324,
+        "confidence": 0.014,
+        "timestamp": "2026-01-04T10:27:09.163998Z",
+        "image": "detections\\YELLOW_139.jpg"
+      },
+      {
+        "id": "YELLOW_140",
+        "type": "YELLOW",
+        "latitude": 10.815322,
+        "longitude": 78.7458688,
+        "altitude_rel": -1.351,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T10:27:11.179097Z",
+        "image": "detections\\YELLOW_140.jpg"
+      },
+      {
+        "id": "YELLOW_141",
+        "type": "YELLOW",
+        "latitude": 10.8153224,
+        "longitude": 78.7458678,
+        "altitude_rel": -1.134,
+        "confidence": 0.015,
+        "timestamp": "2026-01-04T10:27:13.195896Z",
+        "image": "detections\\YELLOW_141.jpg"
+      },
+      {
+        "id": "YELLOW_142",
+        "type": "YELLOW",
+        "latitude": 10.8153227,
+        "longitude": 78.745865,
+        "altitude_rel": -1.123,
+        "confidence": 0.014,
+        "timestamp": "2026-01-04T10:27:15.211108Z",
+        "image": "detections\\YELLOW_142.jpg"
+      },
+      {
+        "id": "YELLOW_143",
+        "type": "YELLOW",
+        "latitude": 10.8153224,
+        "longitude": 78.7458634,
+        "altitude_rel": -1.111,
+        "confidence": 0.012,
+        "timestamp": "2026-01-04T10:27:17.229179Z",
+        "image": "detections\\YELLOW_143.jpg"
+      },
+      {
+        "id": "YELLOW_144",
+        "type": "YELLOW",
+        "latitude": 10.8153237,
+        "longitude": 78.7458627,
+        "altitude_rel": -1.139,
+        "confidence": 0.013,
+        "timestamp": "2026-01-04T10:27:19.244183Z",
+        "image": "detections\\YELLOW_144.jpg"
+      },
+      {
+        "id": "YELLOW_145",
+        "type": "YELLOW",
+        "latitude": 10.815325,
+        "longitude": 78.7458614,
+        "altitude_rel": -1.263,
+        "confidence": 0.014,
+        "timestamp": "2026-01-04T10:27:21.259757Z",
+        "image": "detections\\YELLOW_145.jpg"
+      },
+      {
+        "id": "YELLOW_146",
+        "type": "YELLOW",
+        "latitude": 10.8153263,
+        "longitude": 78.7458593,
+        "altitude_rel": -1.257,
+        "confidence": 0.016,
+        "timestamp": "2026-01-04T10:27:23.275916Z",
+        "image": "detections\\YELLOW_146.jpg"
+      }
+    ]
+  }
+}
