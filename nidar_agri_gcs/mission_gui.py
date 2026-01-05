@@ -59,7 +59,7 @@ class MissionAGROSGUI:
         
         # Load Settings
         settings = self.load_settings()
-        self.connection_string_var = tk.StringVar(value=settings.get("connection_string", "udp:127.0.0.1:14550"))
+        self.connection_string_var = tk.StringVar(value=settings.get("connection_string", "udpin:127.0.0.1:14551"))
         self.mp_path_var = tk.StringVar(value=settings.get("mp_path", self.auto_detect_mp()))
         self.language_var = tk.StringVar(value=settings.get("language", "System"))
         self.fence_alt_max_var = tk.DoubleVar(value=settings.get("fence_alt_max", 80.0))
@@ -69,7 +69,7 @@ class MissionAGROSGUI:
 
         # Connection Variables (UDP Only)
         self.udp_host_var = tk.StringVar(value=settings.get("udp_host", "127.0.0.1"))
-        self.udp_port_var = tk.StringVar(value=settings.get("udp_port", "14550"))
+        self.udp_port_var = tk.StringVar(value=settings.get("udp_port", "14551"))
 
 
 
@@ -110,14 +110,19 @@ class MissionAGROSGUI:
         status_frame = ttk.Frame(header_frame)
         status_frame.pack(side=tk.RIGHT)
         ttk.Label(status_frame, text=_("MAVLink Status:")).pack(side=tk.LEFT, padx=5)
-        self.lbl_mav_status = ttk.Label(status_frame, text=_("CONNECTED") if (self.scanner and self.scanner.mavlink_connected) else _("DISCONNECTED"), 
+        self.lbl_header_mav_status = ttk.Label(status_frame, text=_("CONNECTED") if (self.scanner and self.scanner.mavlink_connected) else _("DISCONNECTED"), 
                                        font=("Arial", 10, "bold"), foreground="red")
-        self.lbl_mav_status.pack(side=tk.LEFT, padx=5)
+        self.lbl_header_mav_status.pack(side=tk.LEFT, padx=5)
 
         ttk.Label(status_frame, text=" | GPS:").pack(side=tk.LEFT, padx=(5, 0))
-        self.lbl_gps_status = ttk.Label(status_frame, text="OFFLINE", 
+        self.lbl_header_gps_status = ttk.Label(status_frame, text="OFFLINE", 
                                        font=("Arial", 10, "bold"), foreground="gray")
-        self.lbl_gps_status.pack(side=tk.LEFT, padx=5)
+        self.lbl_header_gps_status.pack(side=tk.LEFT, padx=5)
+
+        ttk.Label(status_frame, text=" | Bat:").pack(side=tk.LEFT, padx=(5, 0))
+        self.lbl_header_bat_status = ttk.Label(status_frame, text="N/A", 
+                                       font=("Arial", 10, "bold"), foreground="gray")
+        self.lbl_header_bat_status.pack(side=tk.LEFT, padx=5)
 
         
         # === Controls Pane (Notebook for Tabbed View) ===
@@ -172,7 +177,8 @@ class MissionAGROSGUI:
 
     def _get_connection_params(self):
         """Helper to build UDP connection string from current UI state."""
-        conn_str = f"udp:{self.udp_host_var.get()}:{self.udp_port_var.get()}"
+        # Use udpin: to LISTEN for packets from Mission Planner on Localhost
+        conn_str = f"udpin:127.0.0.1:{self.udp_port_var.get()}"
         return conn_str, 115200 # Baud not used for UDP but kept for API compatibility
 
 
@@ -182,9 +188,13 @@ class MissionAGROSGUI:
             # Update the stored variable as well
             self.connection_string_var.set(conn_str)
             
-            self.log(f"[INFO] Manual MAVLink reconnection triggered to {conn_str} at {baud}...")
+            if "udp" in conn_str:
+                 self.log(f"[INFO] Manual MAVLink reconnection triggered to {conn_str}...")
+            else:
+                 self.log(f"[INFO] Manual MAVLink reconnection triggered to {conn_str} at {baud}...")
+                 
             self.scanner.set_connection_string(conn_str, baudrate=baud)
-            self.lbl_mav_status.config(text="CONNECTING...", foreground="orange")
+            self.lbl_header_mav_status.config(text="CONNECTING...", foreground="orange")
             # Start connection in thread to avoid freezing UI
             Thread(target=self.scanner.connect_mavlink, args=(True,), daemon=True).start()
         else:
@@ -294,8 +304,7 @@ class MissionAGROSGUI:
         ttk.Entry(row2, textvariable=self.udp_port_var, width=25).pack(side=tk.LEFT, padx=5)
         ttk.Label(row2, text="(typically 14550 or 14551)", foreground="gray").pack(side=tk.LEFT)
 
-        ttk.Label(frame, text="Note: Serial functionality has been disabled as per requirements.", 
-                  foreground="#cc0000", font=("Arial", 8, "italic")).pack(anchor="w", pady=(10, 0))
+
 
         # Relocated Action Buttons
         btn_row = ttk.Frame(frame)
@@ -405,18 +414,9 @@ class MissionAGROSGUI:
         ctrl_frame = ttk.Frame(parent, padding="10")
         ctrl_frame.pack(fill=tk.X)
         
-        # GPS & Battery Status (Right Side)
-        status_frame = ttk.Frame(ctrl_frame)
-        status_frame.pack(side=tk.RIGHT, padx=5)
-        
-        self.lbl_mav_status = ttk.Label(status_frame, text="MAV: WAIT", font=("Arial", 9, "bold"), foreground="gray")
-        self.lbl_mav_status.pack(side=tk.LEFT, padx=5)
-        
-        self.lbl_gps_status = ttk.Label(status_frame, text="GPS: Wait", font=("Arial", 9), foreground="gray")
-        self.lbl_gps_status.pack(side=tk.LEFT, padx=5)
-        
-        self.lbl_bat_status = ttk.Label(status_frame, text="Bat: N/A", font=("Arial", 9, "bold"), foreground="gray")
-        self.lbl_bat_status.pack(side=tk.LEFT, padx=5)
+        # GPS & Battery Status (Right Side) - REMOVED per user request
+        # status_frame = ttk.Frame(ctrl_frame)
+        # status_frame.pack(side=tk.RIGHT, padx=5)
         
         # Camera Selector
         ttk.Label(ctrl_frame, text="Cam Input:").pack(side=tk.LEFT, padx=5)
@@ -558,13 +558,18 @@ class MissionAGROSGUI:
         # Update MAVLink Status
         if self.scanner:
             if self.scanner.mavlink_connected:
-                self.lbl_mav_status.config(text="CONNECTED", foreground="green")
+                # Update Header
+                self.lbl_header_mav_status.config(text="CONNECTED", foreground="green")
+                
                 # Update GPS
                 fix = getattr(self.scanner, 'gps_fix', 0)
                 sats = getattr(self.scanner, 'sat_count', 0)
                 fix_map = {0: "NO FIX", 1: "NO FIX", 2: "2D", 3: "3D", 4: "DGPS", 5: "RTK-F", 6: "RTK-X"}
                 fix_name = fix_map.get(fix, f"F:{fix}")
-                self.lbl_gps_status.config(text=f"{fix_name} ({sats} Sats)", foreground="blue" if fix >= 3 else "orange")
+                
+                gps_text = f"{fix_name} ({sats} Sats)"
+                # Update Header GPS
+                self.lbl_header_gps_status.config(text=gps_text, foreground="blue" if fix >= 3 else "orange")
                 
                 # Update Battery
                 volts = getattr(self.scanner, 'battery_voltage', 0.0)
@@ -575,7 +580,7 @@ class MissionAGROSGUI:
                 if pct < 20: bat_color = "red"
                 elif pct < 40: bat_color = "orange"
                 
-                self.lbl_bat_status.config(text=f"Bat: {volts:.1f}V ({pct}%)", foreground=bat_color)
+                self.lbl_header_bat_status.config(text=f"{volts:.1f}V ({pct}%)", foreground=bat_color)
                 
                 # Geofence Breach Check
                 if self.geofence:
@@ -590,9 +595,9 @@ class MissionAGROSGUI:
                         else:
                             self.geofence_breached = False
             else:
-                self.lbl_mav_status.config(text="DISCONNECTED", foreground="red")
-                self.lbl_gps_status.config(text="OFFLINE", foreground="gray")
-                self.lbl_bat_status.config(text="Bat: N/A", foreground="gray")
+                self.lbl_header_mav_status.config(text="DISCONNECTED", foreground="red")
+                self.lbl_header_gps_status.config(text="OFFLINE", foreground="gray")
+                self.lbl_header_bat_status.config(text="N/A", foreground="gray")
 
         if self.scanner and self.scanner.running:
              # Sync with background processing

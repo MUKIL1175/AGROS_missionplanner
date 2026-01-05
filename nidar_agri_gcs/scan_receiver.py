@@ -174,8 +174,8 @@ class Scanner:
             
         self.connecting = True
         try:
-            # Force MAVLink 2.0
-            os.environ['MAVLINK20'] = '1'
+            # Force MAVLink 2.0 - Commented out to allow fallback/auto
+            # os.environ['MAVLINK20'] = '1'
             
             print(f"[INFO] Scanner connecting to MAVLink at {self.connection_string} (Baud: {self.baudrate})...")
             # Close existing if any
@@ -189,6 +189,9 @@ class Scanner:
             print("[INFO] Scanner MAVLink Heartbeat Received")
             self.mavlink_connected = True
             self.last_heartbeat = time.time()
+            if self.master:
+                 print(f"[DEBUG] Connected to System {self.master.target_system}, Component {self.master.target_component}")
+                 print(f"[DEBUG] Connection Info: {self.master.address}")
             
             # Start GPS thread if not alive or restarted
             if not hasattr(self, 'gps_thread') or self.gps_thread is None or not self.gps_thread.is_alive():
@@ -198,8 +201,9 @@ class Scanner:
                         if not self.master: break
                         try:
                             # Use non-blocking to keep loop alive for heartbeat checks
-                            msg = self.master.recv_match(type=['GLOBAL_POSITION_INT', 'HEARTBEAT', 'GPS_RAW_INT', 'SYS_STATUS'], blocking=True, timeout=0.1)
+                            msg = self.master.recv_match(blocking=True, timeout=0.1)
                             if msg:
+                                print(f"[DEBUG] RX MAVLink: {msg.get_type()}") # Enabled for debugging
                                 if msg.get_type() == 'HEARTBEAT':
                                     self.last_heartbeat = time.time()
                                     self.mavlink_connected = True
@@ -207,18 +211,28 @@ class Scanner:
                                     self.latitude = msg.lat / 1e7
                                     self.longitude = msg.lon / 1e7
                                     self.altitude_rel = msg.relative_alt / 1000.0
-                                    # Positional data also counts as heartbeat of sorts
+                                    # Infer GPS fix if we are getting position updates but no GPS_RAW_INT
+                                    if self.gps_fix == 0 and self.latitude != 0:
+                                         self.gps_fix = 3 # Assume 3D fix
+                                    
+                                    # Any message counts as "alive"
                                     self.last_heartbeat = time.time()
                                     self.mavlink_connected = True
+
                                 elif msg.get_type() == 'GPS_RAW_INT':
+                                    print(f"[DEBUG] GPS_RAW: Fix={msg.fix_type}, Sats={msg.satellites_visible}, Lat={msg.lat}, Lon={msg.lon}")
                                     self.gps_fix = msg.fix_type
                                     self.sat_count = msg.satellites_visible
                                 elif msg.get_type() == 'SYS_STATUS':
+                                    print(f"[DEBUG] BATTERY: Volts={msg.voltage_battery}, Current={msg.current_battery}, Rem={msg.battery_remaining}")
                                     self.battery_voltage = msg.voltage_battery / 1000.0 if msg.voltage_battery != 65535 else 0.0
                                     self.battery_remaining = msg.battery_remaining if msg.battery_remaining != -1 else 0
-                            
+                                else:
+                                    # Any message counts as "alive"
+                                    self.last_heartbeat = time.time()
+                                    
                             # Check connection status
-                            if time.time() - self.last_heartbeat > 7.0:
+                            if time.time() - self.last_heartbeat > 20.0: # Increased timeout
                                 if self.mavlink_connected:
                                     print("[WARN] MAVLink Heartbeat Lost")
                                     self.mavlink_connected = False
